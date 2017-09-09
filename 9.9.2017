@@ -1,1 +1,13 @@
 
+import time
+def int_from_bin(data=''):
+    return sum([int(data[::-1][x])*2**x for x in range(0, len(data))])
+def get_boxes(length = 1):
+    data = ''.join(['0' for i in range(length)])
+    return [data[:-int(len(str(i)))]+str(i) for i in range(int(data.replace('0', '9'))+1)]
+start_time = time.time()
+print(get_boxes(10))
+end_time = time.time()
+print("Taken Time To Perform This: ", end_time - start_time)
+
+
