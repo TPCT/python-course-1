@@ -15,7 +15,6 @@ def D3_matrix_det(matrix=[[], []]):
     order = row_len[0] if row_len[0] == matrix.__len__() else 0
     offset = 0
     main_matrix_val = 0
-    print(matrix)
     if order:
         for i in matrix[0]:
             val = int(i) * (-1) ** offset
