@@ -30,3 +30,7 @@ def D3_matrix_det(matrix=[[], []]):
             offset += 1
     return main_matrix_val
 
+def factorial(num=0):
+    while num != 0:
+        return num * factorial(num-1)
+    return 1
