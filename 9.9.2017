@@ -34,3 +34,7 @@ def factorial(num=0):
     while num != 0:
         return num * factorial(num-1)
     return 1
+    
+def sort(L=[], reverse=False):
+    return [int(x) if x.isnumeric() else x for x in sorted([str(x) for x in L], reverse=reverse)]
+
