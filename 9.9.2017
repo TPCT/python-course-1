@@ -10,6 +10,19 @@ print(get_boxes(10))
 end_time = time.time()
 print("Taken Time To Perform This: ", end_time - start_time)
 
+def Approximating_Area(function="", lower_boundery=0, upper_boundery=0, ns=0, variable = "x"):
+    if bool(function) and bool(upper_boundery) and bool(ns):
+        width = float(upper_boundery-lower_boundery)/ns
+        area = 0
+        n = lower_boundery
+        n1 = lower_boundery + width
+        while n1 <= upper_boundery:
+            x = float(n+n1)/2
+            area += width * eval(function.replace("x", str(x)))
+            n = n1
+            n1 = n + width
+        return "{0:.5f}".format(area)
+        
 def Prime_Number(n=0):
     'This Will Print The Prime Numbers After 2,3'
     for i in range(1, n):
