@@ -10,6 +10,12 @@ print(get_boxes(10))
 end_time = time.time()
 print("Taken Time To Perform This: ", end_time - start_time)
 
+def bintoint(bincode=""):
+    num = 0
+    bincode = bincode[::-1]
+    for i in range(len(bincode)):
+        num += (int(bincode[i]))*(2**int(i))
+    return num
 def Approximating_Area(function="", lower_boundery=0, upper_boundery=0, ns=0, variable = "x"):
     if bool(function) and bool(upper_boundery) and bool(ns):
         width = float(upper_boundery-lower_boundery)/ns
