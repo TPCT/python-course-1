@@ -84,3 +84,8 @@ def max_number(numbers = []):
     return max
             
 
+def reverse(data=[]):
+    rev_arr = []
+    for i in range(len(data)-1, -1, -1):
+        rev_arr += [data[i]]
+    return rev_arr
