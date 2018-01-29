@@ -72,9 +72,15 @@ def factorial(num=0):
 def sort(L=[], reverse=False):
     return [int(x) if x.isnumeric() else x for x in sorted([str(x) for x in L], reverse=reverse)]
 
-def max(numbers=[]):
-    max_number_offset = 0
-    for i in range(len(numbers)-1):
-        if numbers[max_number_offset] < numbers[i]:
-            max_number_offset = i
-    return numbers[max_number_offset]
+def max_number(numbers = []):
+    max = 0
+    for i in range(len(numbers)):
+        if numbers[i] >= numbers[-(i+1)] and numbers[i] >= max:
+            max = numbers[i]
+        elif numbers[-(i+1)] >= numbers[i] and numbers[-(i+1)] >= max:
+            max = numbers[-(i+1)]
+        else:
+            pass
+    return max
+            
+
