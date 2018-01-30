@@ -89,3 +89,6 @@ def reverse(data=[]):
     for i in range(len(data)-1, -1, -1):
         rev_arr += [data[i]]
     return rev_arr
+    
+def Dict_sort(dictionary={}):
+    return dict(zip(sorted(dictionary), [dictionary[x] for x in sorted(dictionary)]))
