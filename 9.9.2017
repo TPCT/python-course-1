@@ -101,6 +101,12 @@ def max_number(numbers = []):
             pass
     return max
             
+def factorial_modified(num=0):
+    res = 1
+    while num != 0:
+        res *= num
+        num -=1
+    return res
 
 def reverse(data=[]):
     rev_arr = []
