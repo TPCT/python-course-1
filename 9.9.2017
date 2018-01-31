@@ -7,6 +7,8 @@ class bcolors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+def intersction(*seq):
+    return list(set([x for x in seq[0] for q in seq[1:] if x in q ]))
     
 def minmax(compare, *data):
     res = data[0]
