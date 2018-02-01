@@ -9,6 +9,29 @@ class bcolors:
     UNDERLINE = '\033[4m'
 def intersction(*seq):
     return list(set([x for x in seq[0] for q in seq[1:] if x in q ]))
+
+class file_manager:
+    import os
+    def __init__(self, path):
+        self.data = self.__Tree_dscanner(path)
+        pass
+    def __Tree_dscanner(self, path):
+        data = {path:[]}
+        for i in os.listdir(path):
+            if os.path.isdir(i):
+                data.update(self.__Tree_dscanner(i))
+            else:
+                data[path] += [i]
+        return data
+    def printpath(self):
+        readable_data = ""
+        for key in self.data:
+            parser = "\n"
+            for val in self.data[key]:
+                parser += "   -"+str(val)+"\n"
+            readable_data += "--dir ["+str(key)+"]"+parser
+        return readable_data
+    
 class Infix:
     def __init__(self, function):
         self.function = function
