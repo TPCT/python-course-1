@@ -7,6 +7,32 @@ class bcolors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+def biggest_triang_int(point_list, center, radius):
+    try:
+        import itertools
+        vector_formulation = lambda a, b: (b[0]-a[0], b[1]-a[1], b[2]-a[2])
+        cross_product = lambda a, b: (a[1]*b[2] - a[2]*b[1], a[2]*b[0] - a[0]*b[2], a[0]*b[1] - a[1]*b[0])
+        vector_magnitude = lambda x,y,z: ((x**2)+(y**2)+(z**2))**(0.5)
+        inside_check = lambda p: True if vector_magnitude(*vector_formulation(center, p)) <= radius else False
+        triangle_area = lambda vector1, vector2: vector_magnitude(*cross_product(vector1, vector2))*0.5
+        areas = []; areas_combination = []; points = [(x) for x in point_list if inside_check(x)]
+        for combination in list(itertools.combinations(points, 3)):
+            vector1 = vector_formulation(combination[0], combination[1])
+            vector2 = vector_formulation(combination[0], combination[2])
+            area = triangle_area(vector1, vector2)
+            areas += [area]
+            areas_combination += [(combination, area)]
+        max_area = max(areas)
+        res = []
+        for x in areas_combination:
+            if x[1] == max_area:
+                res += [list(x[0])]
+        if len(res) <= 1:
+            return [len(areas), max_area, res[0]]
+        else:
+            return [len(areas), max_area, res]
+    except:
+            return []
 def intersction(*seq):
     return list(set([x for x in seq[0] for q in seq[1:] if x in q ]))
 def biggest_triang_int(point_list, center, radius):
