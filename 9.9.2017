@@ -7,7 +7,30 @@ class bcolors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
-    
+def simple_assembler(program):
+    to_be_excuted = [line.split(" ") for line in program.split("\n")]
+    Done = []
+    enteries = {}
+    nov = lambda x: int(x) if str(x).replace("-", "").isnumeric() else int(enteries[x])
+    while to_be_excuted:
+        excuting = to_be_excuted.pop(0)
+        Done += [excuting]
+        if excuting[0] == "mov":
+            enteries[excuting[1]] = nov(excuting[2])
+        elif excuting[0] == "inc":
+            enteries[excuting[1]] += 1
+        elif excuting[0] == "dec":
+            enteries[excuting[1]] -= 1
+        elif excuting[0] == "jnz":
+            if nov(excuting[2]) < 0:
+                if enteries[excuting[1]] > 0:
+                    to_be_excuted = Done[int(nov(excuting[2]))-1:] + to_be_excuted
+                    Done = Done[:int(nov(excuting[2]))-1]
+                else:
+                    continue
+            else:
+                to_be_excuted = to_be_excuted[int(nov(excuting[2])):]
+    return enteries 
 def brainfuck_to_c(source_code):
     if source_code.count("[") == source_code.count("]"):
         while source_code.count("[]") > 0:
