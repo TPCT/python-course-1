@@ -7,6 +7,53 @@ class bcolors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+    
+def brainfuck_to_c(source_code):
+    if source_code.count("[") == source_code.count("]"):
+        while source_code.count("[]") > 0:
+            source_code = source_code.replace("[]", "")
+        data = dict(); identifier = 0; counter = 0
+        for char in source_code:
+            if char == "+" or char == '-' or char == '>' or char == '<':
+                if counter != 0 and char != source_code[counter - 1]:
+                    identifier += 1
+                if (str(identifier), char) in data.keys():
+                    data[(str(identifier), char)] += str(identifier)
+                else:
+                    data[(str(identifier), char)] = str(identifier)
+            else:
+                if (str(identifier), char) not in data.keys():
+                    data[(str(identifier), char)] = str(identifier)
+                else:
+                    data[(str(identifier), char)] += str(identifier)
+                    pass
+                identifier += 1
+            counter += 1
+        def replacer(dictionary):
+            translate_code = ""
+            for (key, value) in dictionary.items():
+                if key[1] == "+":
+                    translate_code += "*p += %d;\n" % value.count(key[0])
+                elif key[1] == '>':
+                    translate_code += "p += %d;\n" % value.count(key[0])
+                elif key[1] == '-':
+                    translate_code += "*p += %d;\n" % value.count(key[0])
+                elif key[1] == '<':
+                    translate_code += "p -= %d;\n" % value.count(key[0])
+                elif key[1] == '.':
+                    translate_code += "putchar(*p);\n"
+                elif key[1] == ',':
+                    translate_code += "*p = getchar();\n"
+                elif key[1] == '[':
+                    translate_code += "if (*p) do {\n"
+                elif key[1] == ']':
+                    translate_code += "} while (*p);\n"
+            return translate_code
+        return replacer(data)
+    else:
+        return "Error!"
+
+
 def biggest_triang_int(point_list, center, radius):
     try:
         import itertools
