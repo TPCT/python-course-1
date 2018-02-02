@@ -9,7 +9,19 @@ class bcolors:
     UNDERLINE = '\033[4m'
 def intersction(*seq):
     return list(set([x for x in seq[0] for q in seq[1:] if x in q ]))
-
+def biggest_triang_int(point_list, center, radius):
+    import itertools
+    vector_formulation = lambda a, b: (b[0]-a[0], b[1]-a[1], b[2]-a[2])
+    cross_product = lambda a, b: (a[1]*b[2] - a[2]*b[1], a[2]*b[0] - a[0]*b[2], a[0]*b[1] - a[1]*b[0])
+    vector_magnitude = lambda x,y,z: ((x**2)+(y**2)+(z**2))**(0.5)
+    inside_check = lambda p: True if vector_magnitude(*vector_formulation(center, p)) <= radius else False
+    triangle_area = lambda vector1, vector2: vector_magnitude(*cross_product(vector1, vector2))*0.5
+    areas = []
+    for combination in list(itertools.combinations([(x) for x in point_list if inside_check(x)], 3)):
+        vector1 = vector_formulation(combination[0], combination[1])
+        vector2 = vector_formulation(combination[0], combination[2])
+        areas += [triangle_area(vector1, vector2)]
+    return max(areas)
 class file_manager:
     import os
     def __init__(self, path):
