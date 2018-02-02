@@ -37,7 +37,7 @@ def brainfuck_to_c(source_code):
                 elif key[1] == '>':
                     translate_code += "p += %d;\n" % value.count(key[0])
                 elif key[1] == '-':
-                    translate_code += "*p += %d;\n" % value.count(key[0])
+                    translate_code += "*p -= %d;\n" % value.count(key[0])
                 elif key[1] == '<':
                     translate_code += "p -= %d;\n" % value.count(key[0])
                 elif key[1] == '.':
@@ -52,6 +52,8 @@ def brainfuck_to_c(source_code):
         return replacer(data)
     else:
         return "Error!"
+
+print(brainfuck_to_c("++++[.++--]"))
 
 
 def biggest_triang_int(point_list, center, radius):
