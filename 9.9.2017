@@ -7,6 +7,17 @@ class bcolors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+def sorting_algorithm(lst):
+    main_list = []; [main_list.append(x) for x in lst if not x in main_list]
+    sorted_array = []
+    while main_list:
+        smallest_number = main_list[0]
+        for number in main_list[1:]:
+            if number < smallest_number:
+                smallest_number = number
+        main_list.remove(smallest_number)
+        sorted_array += [smallest_number]
+    return sorted_array
 def simple_assembler(program):
     to_be_excuted = [line.split(" ") for line in program.split("\n")]
     Done = []
