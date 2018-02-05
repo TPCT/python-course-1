@@ -7,6 +7,25 @@ class bcolors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+def find_prime_kPerm(n, kPerm):
+    from itertools import permutations as perm
+    def is_prime(number):
+        for i in range(2, number):
+            if number % i == 0 and not number == 2:
+                return False
+        return True
+    primes = [x for x in range(12, n+1) if is_prime(x)]
+    res = []
+    for i in primes:
+        required_perm = [int(''.join(list(x))) for x in perm(str(i))]
+        required_perm = [x for x in required_perm if is_prime(x) and x != i and len(str(x)) == len(str(i))]
+        if len(required_perm) == kPerm:
+            res += [i]
+    if len(res) == 0:
+        return [0, 0, 0]
+    else:
+        return [len(res), min(res), max(res)]
+
 def skrzat(base, number):
     if base == 'b':
         number = number[::-1]
@@ -227,118 +246,4 @@ class Infix:
     def __init__(self, function):
         self.function = function
     def __ror__(self, other):
-        return Infix(lambda x, self=self, other=other: self.function(other, x))
-    def __or__(self, other):
-        return self.function(other)
-    def __rlshift__(self, other):
-        return Infix(lambda x, self=self, other=other: self.function(other, x))
-    def __rshift__(self, other):
-        return self.function(other)
-    def __call__(self, value1, value2):
-        return self.function(value1, value2)    
-def minmax(compare, *data):
-    res = data[0]
-    for i in data[1:]:
-        if not compare(res, i):
-            res = i
-    return res
-    
-import time
-def int_from_bin(data=''):
-    return sum([int(data[::-1][x])*2**x for x in range(0, len(data))])
-def get_boxes(length = 1):
-    data = ''.join(['0' for i in range(length)])
-    return [data[:-int(len(str(i)))]+str(i) for i in range(int(data.replace('0', '9'))+1)]
-start_time = time.time()
-print(get_boxes(10))
-end_time = time.time()
-print("Taken Time To Perform This: ", end_time - start_time)
-
-def bintoint(bincode=""):
-    num = 0
-    bincode = bincode[::-1]
-    for i in range(len(bincode)):
-        num += (int(bincode[i]))*(2**int(i))
-    return num
-def Approximating_Area(function="", lower_boundery=0, upper_boundery=0, ns=0, variable = "x"):
-    if bool(function) and bool(upper_boundery) and bool(ns):
-        width = float(upper_boundery-lower_boundery)/ns
-        area = 0
-        n = lower_boundery
-        n1 = lower_boundery + width
-        while n1 <= upper_boundery:
-            x = float(n+n1)/2
-            area += width * eval(function.replace("x", str(x)))
-            n = n1
-            n1 = n + width
-        return "{0:.5f}".format(area)
-        
-def Prime_Number(n=0):
-    'This Will Print The Prime Numbers After 2,3'
-    for i in range(1, n):
-        next_Prime_Number = (4*i)+1
-        Is_Prime = False
-        for q in range(2, next_Prime_Number):
-            if next_Prime_Number % q == 0:
-                Is_Prime = False
-                break
-            elif next_Prime_Number % q != 0 and q == next_Prime_Number-1:
-                Is_Prime = True
-        if Is_Prime:
-            print("Order:[" + str(i)+"]", next_Prime_Number, "This Is Prime Number")
-    return "Done"
-    
-def D3_matrix_det(matrix=[[], []]):
-    row_len = [len(x) for x in matrix]
-    order = row_len[0] if row_len[0] == matrix.__len__() else 0
-    offset = 0
-    main_matrix_val = 0
-    if order:
-        for i in matrix[0]:
-            val = int(i) * (-1) ** offset
-            num = [i]
-            for j in matrix[1:]:
-                num.append(j[:offset] + j[offset + 1:])
-            if num[1:].__len__() == 2:
-                num = num[1:]
-                val *= (int(num[0][0]) * int(num[1][1])) - (int(num[0][1]) * int(num[1][0]))
-                main_matrix_val += val
-            else:
-                main_matrix_val += val * D3_matrix_det(num[1:])
-            offset += 1
-    return main_matrix_val
-
-def factorial(num=0):
-    while num != 0:
-        return num * factorial(num-1)
-    return 1
-    
-def sort(L=[], reverse=False):
-    return [int(x) if x.isnumeric() else x for x in sorted([str(x) for x in L], reverse=reverse)]
-
-def max_number(numbers = []):
-    max = 0
-    for i in range(len(numbers)):
-        if numbers[i] >= numbers[-(i+1)] and numbers[i] >= max:
-            max = numbers[i]
-        elif numbers[-(i+1)] >= numbers[i] and numbers[-(i+1)] >= max:
-            max = numbers[-(i+1)]
-        else:
-            pass
-    return max
-            
-def factorial_modified(num=0):
-    res = 1
-    while num != 0:
-        res *= num
-        num -=1
-    return res
-
-def reverse(data=[]):
-    rev_arr = []
-    for i in range(len(data)-1, -1, -1):
-        rev_arr += [data[i]]
-    return rev_arr
-    
-def Dict_sort(dictionary={}):
-    return dict(zip(sorted(dictionary), [dictionary[x] for x in sorted(dictionary)]))
+        return Infix(lambda x, self=self, other=
