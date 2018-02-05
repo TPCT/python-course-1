@@ -7,6 +7,47 @@ class bcolors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+def knights_tour(start, size):
+    import time, copy
+
+    def make_board(size):
+        return {(x, y): 0 for x in range(1, size+1) for y in range(1, size+1)}
+    my_board = make_board(size)
+    my_board[tuple(start)] = 1
+    moves = [start]
+    next_move = start
+    knight_moves = ((1, 2), (-1, 2), (2, 1), (-2, 1), (2, -1), (-2, -1), (-1, -2), (1, -2))
+
+    def make_string_from_board(my_board):
+        board = []
+        for row in range(size):
+            board += [[]]
+            for column in range(size):
+                board[row] += [my_board[(row+1, column+1)]]
+        return board
+    def avail_moves(point, board):
+        return set((point[0]+_x, point[1]+_y) for _x, _y in knight_moves if (1 <= point[0]+_x <= size
+                   and 1 <= point[1]+_y <= size) and not board[(point[0]+_x, point[1]+_y)])
+    counter = 0
+
+    def accessability(move):
+        access = []
+        board = copy.deepcopy(my_board)
+        for position in avail_moves(move, board):
+            board[position] = 1
+            access.append((len(avail_moves(position, board)), position))
+            board[position] = 0
+        return access
+    while counter < size * size:
+        if accessability(next_move):
+            next_move = min(accessability(next_move))[1]
+            my_board[next_move] = 1
+            moves += [list(next_move)]
+            counter += 1
+        else:
+            break
+    return moves
+
 def sorting_algorithm(lst):
     main_list = []; [main_list.append(x) for x in lst if not x in main_list]
     sorted_array = []
