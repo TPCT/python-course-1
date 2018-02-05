@@ -7,6 +7,29 @@ class bcolors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+def skrzat(base, number):
+    if base == 'b':
+        number = number[::-1]
+        decoded_number = 0
+        for i in range(len(number)):
+            decoded_number += ((-2)**i) * int(number[i])
+        return 'From binary: %s is %s' % (number[::-1], decoded_number)
+    elif base == 'd':
+        x = number
+        if number == 0:
+            return "0"
+        converted_number = ""
+        while number != 0:
+            remainder = number % -2
+            number //= -2
+            if remainder < 0:
+                remainder += 2
+                number += 1
+            converted_number += str(abs(remainder))
+        return "From decimal: %s is %s" % (x, converted_number[::-1])
+    else:
+        return None
+    pass
 def knights_tour(start, size):
     import time, copy
 
