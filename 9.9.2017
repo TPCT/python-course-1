@@ -7,6 +7,56 @@ class bcolors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+def interpreter(code, tape):
+    result = tape
+    def icot(code=code):
+        opening_tag = dict()
+        op_tag = []
+        sub_counter = 0
+        for command in code:
+            if command == '[':
+                op_tag += [sub_counter]
+            elif command == ']':
+                opening_tag[op_tag.pop()] = sub_counter
+            sub_counter += 1
+        return opening_tag
+    tape_counter = 0
+    command_counter = 0
+    command_freeze = False
+    tags = icot()
+    while 0 <= tape_counter < len(tape) and 0 <=  command_counter < len(code):
+        command = code[command_counter]
+        if command == '>':
+            command_counter += 1
+            tape_counter += 1
+        elif command == '<':
+            command_counter += 1
+            tape_counter -= 1
+        elif command == '*':
+            if 0 <= tape_counter < len(result):
+                result = list(result)
+                if result[tape_counter] == '0':
+                    result[tape_counter] = '1'
+                else:
+                    result[tape_counter] = '0'
+                result = ''.join(result)
+            else:
+                return result
+            command_counter += 1
+        elif command == '[':
+            tags[tags[command_counter]] = command_counter
+            if result[tape_counter] == '0':
+                command_counter = tags[command_counter]
+            else:
+                command_counter += 1
+        elif command == ']':
+            if result[tape_counter] == '1':
+                command_counter = tags[command_counter]
+            else:
+                command_counter += 1
+        else:
+            command_counter += 1
+    return result
 def find_prime_kPerm(n, kPerm):
     from itertools import permutations as perm
     def is_prime(number):
