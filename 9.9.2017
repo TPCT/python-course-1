@@ -7,6 +7,7 @@ class bcolors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+primes = lambda n: [x for x in range(2, n+1) if x >= 2 and (len([x for check in range(2, x) if (x % check == 0 and check != x)]) == 0)]
 def interpreter(code, tape):
     result = tape
     def icot(code=code):
