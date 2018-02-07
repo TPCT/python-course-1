@@ -304,13 +304,11 @@ class matrix_operation:
     secondery_diagonal_elements = lambda matrix: [matrix[i-1][-i] for i in range(1, len(matrix)+1)]
     def matrix_multiplication(M1,M2):
         custom_map = lambda function, iterable, command: function(iterable, command)
-        columns_get = lambda matrix:[custom_map(lambda x,y: x[y], row, column)
-               for column in range(len(matrix[0]))
-                for row in matrix]
-                splitter = lambda array, chunk_size: [array[x: x+chunk_size] for x in range(0, len(array), chunk_size)]
-        columns = splitter(columns_get(M2), len(M2))
+        columns_get = lambda matrix:[[custom_map(lambda x,y: x[y], row, column) for row in matrix]
+               for column in range(len(matrix[0]))]
+        columns = columns_get(M2)
         if len(columns[0]) == len(M1):
-            multiplication_operation = [sum(list(map(lambda x,y: x*y, row, column))) for row in M1 for column in columns]
-            return splitter(multiplication_operation, len(columns))
+            multiplication_operation = [[sum(list(map(lambda x,y: x*y, row, column))) for column in columns] for row in M1]
+            return multiplication_operation
         else:
             return "Parsing Matrix Error"
