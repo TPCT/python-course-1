@@ -300,15 +300,26 @@ class Infix:
         return Infix(lambda x, self=self, other=
 
 class matrix_operation:
-    main_diagonal_elements = lambda matrix: [matrix[i][i] for i in range(len(matrix))]
-    secondery_diagonal_elements = lambda matrix: [matrix[i-1][-i] for i in range(1, len(matrix)+1)]
-    def matrix_multiplication(M1,M2):
-        custom_map = lambda function, iterable, command: function(iterable, command)
-        columns_get = lambda matrix:[[custom_map(lambda x,y: x[y], row, column) for row in matrix]
-               for column in range(len(matrix[0]))]
-        columns = columns_get(M2)
+    custom_map = lambda self, function, iterable, command: function(iterable, command)
+    get_columns = lambda self, matrix:[[self.custom_map(lambda x,y: x[y], row, column) for row in matrix] for column in range(len(matrix[0]))]
+    addition_operation = lambda self, matrix1, matrix2: [[matrix1[row][column] + matrix2[row][column] for column in range(len(matrix1[row]))] for row in range(len(matrix1))]
+    subtraction_operation = lambda self, matrix1, matrix2: [[matrix1[row][column] - matrix2[row][column] for column in range(len(matrix1[row]))] for row in range(len(matrix1))]
+    multiplication_operation = lambda self, main_matrix, columns: [[sum(list(map(lambda x,y: x*y, row, column))) for column in columns] for row in main_matrix]
+    main_diagonal_elements = lambda self, matrix: [matrix[i][i] for i in range(len(matrix))]
+    secondery_diagonal_elements = lambda self, matrix: [matrix[i-1][-i] for i in range(1, len(matrix)+1)]        
+    def matrix_multiplication(self, M1,M2):
+        columns = get_columns(M2)
         if len(columns[0]) == len(M1):
-            multiplication_operation = [[sum(list(map(lambda x,y: x*y, row, column))) for column in columns] for row in M1]
-            return multiplication_operation
+            return self.multiplication_operation(M1, columns)
+        else:
+            return "Parsing Matrix Error"
+    def matrix_addition(self, M1, M2):
+        if len(M1) == len(M2) and len(self.get_columns(M1)) == len(self.get_columns(M2)):
+            return self.addition_operation(M1, M2)
+        else:
+            return "Parsing Matrix Error"
+    def matrix_subtraction(self, M1, M2):
+        if len(M1) == len(M2) and len(self.get_columns(M1)) == len(self.get_columns(M2)):
+            return self.subtraction_operation(M1, M2)
         else:
             return "Parsing Matrix Error"
