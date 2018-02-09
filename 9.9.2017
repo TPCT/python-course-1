@@ -1,3 +1,13 @@
+def get_line_eqn(point1, point2):
+    point1, point2 = tuple(int(x) for x in point1.split(',')), tuple(int(x) for x in point2.split(','))
+    slope = (point2[1] - point1[1])/(point2[0] - point1[0]) if point2[0] - point1[0] != 0 else "undefined"
+    if slope != 'undefined':
+        intercept = (slope*point1[0]) + point1[1]
+        slope_intercept_eqn = "Y = %sx + %s" % (slope, intercept)
+        point_slope_eqn = "Y = (%s)(x-%s) + %s" %(slope, point1[0], point1[1])
+        return "slope: %s\nslope intercept equation:%s\npoint slope equation:%s" % (slope, slope_intercept_eqn, point_slope_eqn)
+    else:
+        return "slope: undefined\nequation of line: x=%s" % point1[0]
 class bcolors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
