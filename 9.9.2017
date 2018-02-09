@@ -1,3 +1,24 @@
+def get_root(eqn):
+    from fractions import Fraction; from string import ascii_letters
+    main_variable, eqn = set([x for x in eqn if x in ascii_letters]),\
+                         eqn.replace(' ', '').replace('-', '+-').replace('^', '**').split('+')
+    if len(main_variable) > 1: return "This Is Multi-Variable Equation"
+    elif len(main_variable) == 0: return "This Is Not Valid Equation"
+    main_variable = list(main_variable)[0]
+    equation = '+'.join(['(' + i.split(main_variable)[0] + "*(%s)" % main_variable + ''.join(i.split(main_variable)[1:]) + ')'
+                                                      if i.split(main_variable)[0][-1] != '*' and i.split(main_variable)[0][-1] != '-' and len(i.split(main_variable)) > 1
+                                                      else '(' + i + ')' for i in eqn])
+    max_power_coffient, free_term, divisors = Fraction.from_float(float([x.split(main_variable)[0] for x in eqn if main_variable+'**'+
+                                   str(max([int(x.replace('(', '').replace(')', '').split('**')[1]) for x in eqn if x.count('**') > 0]))
+                                   in x.replace('(','').replace(')', '')][0])).limit_denominator(),\
+                                   Fraction.from_float(float([x for x in eqn if x.replace('.', '').isnumeric()][0])).limit_denominator(),\
+                                   lambda number: [n for n in range(1, int(number)+1) if number % n == 0]
+    max_power_coffient_divisors, free_term_divisors = divisors(max_power_coffient), divisors(free_term)
+    roots = [x for x in list(set([-i/n if not float(eval(equation.replace(main_variable, str(-i/n))))
+                      else i/n if not float(eval(equation.replace(main_variable, str(i/n)))) else False
+                      for i in free_term_divisors for n in max_power_coffient_divisors])) if x]
+    return Fraction.from_float(float(roots[0])) if len(roots) > 0 else "There's No Roots"
+
 def get_line_eqn(point1, point2):
     point1, point2 = tuple(int(x) for x in point1.split(',')), tuple(int(x) for x in point2.split(','))
     slope = (point2[1] - point1[1])/(point2[0] - point1[0]) if point2[0] - point1[0] != 0 else "undefined"
