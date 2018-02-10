@@ -18,9 +18,9 @@ def get_roots(eqn):
                                    [Fraction.from_float(float(x.split(main_variable)[0])) for x in eqn if x.count(main_variable) == 1 and len(x.split(main_variable)[1]) == 0]
     first_power_coffient = first_power_coffient[0] if first_power_coffient else 0
     if max_power == 2:
-        dis = first_power_coffient ** 2 - 4*(free_term)*(max_power_coffient)
+        dis = (first_power_coffient ** 2) - 4*(free_term)*(max_power_coffient)
         dis = (dis)**0.5 if dis >= 0 else None
-        return ("There Are Two Roots: %s, %s" %(str((-first_power_coffient)- dis/(2*max_power_coffient)), str((-first_power_coffient)+dis/(2*max_power_coffient)))
+        return ("There Are Two Roots: %s, %s" %(str(Fraction.from_float(((-first_power_coffient)- dis)/(2*max_power_coffient))), str(Fraction.from_float(((-first_power_coffient)+dis)/(2*max_power_coffient))))
                 if dis > 0 else "There's Only One Root: %s" % str((-first_power_coffient)/(2*max_power_coffient))) if dis != None else "There's No Real Roots"
     max_power_coffient_divisors, free_term_divisors = divisors(max_power_coffient), divisors(free_term)
     roots = sum([[float(i/n), float(-i/n)] if not float(eval(equation.replace(main_variable, str(i/n)))) else [float(-i/n)]
@@ -28,7 +28,6 @@ def get_roots(eqn):
                       else i/n if not float(eval(equation.replace(main_variable, str(i/n)))) else []
                       for i in free_term_divisors for n in max_power_coffient_divisors], [])
     return "The Roots: %s" % ', '.join(list(map(str, map(Fraction.from_float, roots))))  if len(roots) > 0 else "There's No Roots"
-
 def get_line_eqn(point1, point2):
     point1, point2 = tuple(int(x) for x in point1.split(',')), tuple(int(x) for x in point2.split(','))
     slope = (point2[1] - point1[1])/(point2[0] - point1[0]) if point2[0] - point1[0] != 0 else "undefined"
