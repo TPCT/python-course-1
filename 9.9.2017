@@ -1,23 +1,32 @@
 def get_root(eqn):
     from fractions import Fraction; from string import ascii_letters
     main_variable, eqn = set([x for x in eqn if x in ascii_letters]),\
-                         eqn.replace(' ', '').replace('-', '+-').replace('^', '**').split('+')
+                         eqn.replace(' ', '').replace('-', '+-').replace('^', '**').replace('(', '').replace(')', '').split('+')
     if len(main_variable) > 1: return "This Is Multi-Variable Equation"
     elif len(main_variable) == 0: return "This Is Not Valid Equation"
     main_variable = list(main_variable)[0]
     equation = '+'.join(['(' + i.split(main_variable)[0] + "*(%s)" % main_variable + ''.join(i.split(main_variable)[1:]) + ')'
-                                                      if i.split(main_variable)[0][-1] != '*' and i.split(main_variable)[0][-1] != '-' and len(i.split(main_variable)) > 1
-                                                      else '(' + i + ')' for i in eqn])
-    max_power_coffient, free_term, divisors = Fraction.from_float(float([x.split(main_variable)[0] for x in eqn if main_variable+'**'+
-                                   str(max([int(x.replace('(', '').replace(')', '').split('**')[1]) for x in eqn if x.count('**') > 0]))
-                                   in x.replace('(','').replace(')', '')][0])).limit_denominator(),\
-                                   Fraction.from_float(float([x for x in eqn if x.replace('.', '').isnumeric()][0])).limit_denominator(),\
-                                   lambda number: [n for n in range(1, int(number)+1) if number % n == 0]
+                                                      if len(i.split(main_variable)[0]) > 0 and len(i.split(main_variable)) > 1 and i.split(main_variable)[0][-1] != '*' and i.split(main_variable)[0][-1] != '-'
+                                                      else '(' + '(%s)**' %(i.split('**')[0]) + ''.join(i.split('**')[1:]) + ')'
+                                                      if len(i.split('**')) > 1 else '(' + '(%s)' %(i.split('**')[0])+ ')'  for i in eqn])
+    max_power = max([int(q.replace('(', '').replace(')', '').split('**')[1]) for q in eqn if q.count('**') > 0])
+    max_power_coffient, free_term, divisors, first_power_coffient = Fraction.from_float(float([x.split(main_variable)[0] if main_variable+'**'+ str(max_power)
+                                   in x.replace('(','').replace(')', '') and len(x.split(main_variable)[0]) > 0 else 1
+                                   for x in eqn][0])).limit_denominator(),\
+                                   Fraction.from_float(float([x for x in eqn if x.replace('.', '').replace('-','').isnumeric()][0])).limit_denominator(),\
+                                   lambda number: [n for n in range(1, int(abs(number))+1) if number % n == 0],\
+                                   [Fraction.from_float(float(x.split(main_variable)[0])) for x in eqn if x.count(main_variable) == 1 and len(x.split(main_variable)[1]) == 0]
+    first_power_coffient = first_power_coffient[0] if first_power_coffient else 0
+    if max_power == 2:
+        dis = first_power_coffient ** 2 - 4*(free_term)*(max_power_coffient)
+        dis = (dis)**0.5 if dis >= 0 else None
+        return ("There Are Two Roots: %s, %s" %(str((-first_power_coffient)- dis/(2*max_power_coffient)), str((-first_power_coffient)+dis/(2*max_power_coffient)))
+                if dis > 0 else "There's Only One Root: %s" % str((-first_power_coffient)/(2*max_power_coffient))) if dis != None else "There's No Real Roots"
     max_power_coffient_divisors, free_term_divisors = divisors(max_power_coffient), divisors(free_term)
     roots = [x for x in list(set([-i/n if not float(eval(equation.replace(main_variable, str(-i/n))))
                       else i/n if not float(eval(equation.replace(main_variable, str(i/n)))) else False
                       for i in free_term_divisors for n in max_power_coffient_divisors])) if x]
-    return Fraction.from_float(float(roots[0])) if len(roots) > 0 else "There's No Roots"
+    return "One Of The Roots: %s" % Fraction.from_float(float(roots[0])) if len(roots) > 0 else "There's No Roots"
 
 def get_line_eqn(point1, point2):
     point1, point2 = tuple(int(x) for x in point1.split(',')), tuple(int(x) for x in point2.split(','))
