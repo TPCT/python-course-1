@@ -1,5 +1,5 @@
-def get_root(eqn):
-    from fractions import Fraction; from string import ascii_letters
+def get_roots(eqn):
+    from fractions import Fraction; from string import ascii_letters; from itertools import chain
     main_variable, eqn = set([x for x in eqn if x in ascii_letters]),\
                          eqn.replace(' ', '').replace('-', '+-').replace('^', '**').replace('(', '').replace(')', '').split('+')
     if len(main_variable) > 1: return "This Is Multi-Variable Equation"
@@ -23,10 +23,11 @@ def get_root(eqn):
         return ("There Are Two Roots: %s, %s" %(str((-first_power_coffient)- dis/(2*max_power_coffient)), str((-first_power_coffient)+dis/(2*max_power_coffient)))
                 if dis > 0 else "There's Only One Root: %s" % str((-first_power_coffient)/(2*max_power_coffient))) if dis != None else "There's No Real Roots"
     max_power_coffient_divisors, free_term_divisors = divisors(max_power_coffient), divisors(free_term)
-    roots = [x for x in list(set([-i/n if not float(eval(equation.replace(main_variable, str(-i/n))))
-                      else i/n if not float(eval(equation.replace(main_variable, str(i/n)))) else False
-                      for i in free_term_divisors for n in max_power_coffient_divisors])) if x]
-    return "One Of The Roots: %s" % Fraction.from_float(float(roots[0])) if len(roots) > 0 else "There's No Roots"
+    roots = sum([[float(i/n), float(-i/n)] if not float(eval(equation.replace(main_variable, str(i/n)))) else [float(-i/n)]
+                      if not float(eval(equation.replace(main_variable, str(-i/n))))
+                      else i/n if not float(eval(equation.replace(main_variable, str(i/n)))) else []
+                      for i in free_term_divisors for n in max_power_coffient_divisors], [])
+    return "The Roots: %s" % ', '.join(list(map(str, map(Fraction.from_float, roots))))  if len(roots) > 0 else "There's No Roots"
 
 def get_line_eqn(point1, point2):
     point1, point2 = tuple(int(x) for x in point1.split(',')), tuple(int(x) for x in point2.split(','))
