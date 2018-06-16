@@ -363,3 +363,23 @@ class matrix_operation:
             return self.subtraction_operation(M1, M2)
         else:
             return "Parsing Matrix Error"
+def loading_bar(length=10, time_sleep: 'millisecond'=100, shape1='*', shape2='-'):
+    import time, sys
+    progress_bar = ""
+    for i in range(length+1):
+        if i % 2 == 0:
+            progress_bar = "[%s%s][%s" % (i, '%', shape1 * i)
+        else:
+            progress_bar = "[%s%s][%s" % (i, '%', shape2 * i)
+        sys.stdout.write(progress_bar)
+        sys.stdout.flush()
+        if i < length-1:
+            time.sleep(time_sleep * (1e-3))
+            sys.stdout.write('\r')
+            sys.stdout.flush()
+        else:
+            sys.stdout.write('\r')
+            sys.stdout.flush()
+            sys.stdout.write(progress_bar)
+    sys.stdout.write(']')
+loading_bar(100, 500, '|')
