@@ -1,3 +1,19 @@
+def fibbo(nth_number=10):
+    import sys
+    n1, n2 = 0, 1
+    sys.stdout.write("1\n")
+    sys.stdout.flush()
+    for i in range(nth_number):
+        n3 = n1+n2
+        n1, n2 = n2, n3
+        if i < nth_number -1:
+            sys.stdout.write(str(n3) + '\n')
+            sys.stdout.flush()
+        else:
+            sys.stdout.write(str(n3)+'\n')
+            sys.stdout.flush()
+
+fibbo(10)
 def get_roots(eqn):
     from fractions import Fraction; from string import ascii_letters; from itertools import chain
     main_variable, eqn = set([x for x in eqn if x in ascii_letters]),\
