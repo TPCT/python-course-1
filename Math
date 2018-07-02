@@ -6,6 +6,31 @@ class matrix_operation:
     multiplication_operation = lambda self, main_matrix, columns: [[sum(list(map(lambda x,y: x*y, row, column))) for column in columns] for row in main_matrix]
     main_diagonal_elements = lambda self, matrix: [matrix[i][i] for i in range(len(matrix))]
     secondery_diagonal_elements = lambda self, matrix: [matrix[i-1][-i] for i in range(1, len(matrix)+1)]        
+    def matrix_determinant(self, matrix):
+	total, sign = 0, 1
+	if isinstance(matrix, list):
+		print(matrix)
+		if len(matrix) != len(matrix[0]):
+			return 'We cannot find the determinant of non squared matrix'
+		else:
+			if len(matrix) > 2:
+				for col in range(len(matrix)):
+					minor_matrix = []
+					for row in range(1, len(matrix)):
+						minor_row = []
+						for new_col in range(len(matrix)):
+							if new_col != col:
+								minor_row.append(matrix[row][new_col])
+						minor_matrix.append(minor_row)
+					total += sign * matrix[0][col] * matrix_solve(minor_matrix)
+					sign *= -1
+			else:
+				return matrix[0][0] * matrix[1][1] - matrix[1][0] * matrix[0][1]
+	return total
+
+
+
+
     def matrix_multiplication(self, M1,M2):
         columns = get_columns(M2)
         if len(columns[0]) == len(M1):
