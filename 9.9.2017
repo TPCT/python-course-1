@@ -1,59 +1,3 @@
-def fibbo(nth_number=10):
-    import sys
-    n1, n2 = 0, 1
-    sys.stdout.write("1\n")
-    sys.stdout.flush()
-    for i in range(nth_number):
-        n3 = n1+n2
-        n1, n2 = n2, n3
-        if i < nth_number -1:
-            sys.stdout.write(str(n3) + '\n')
-            sys.stdout.flush()
-        else:
-            sys.stdout.write(str(n3)+'\n')
-            sys.stdout.flush()
-
-fibbo(10)
-def get_roots(eqn):
-    from fractions import Fraction; from string import ascii_letters; from itertools import chain
-    main_variable, eqn = set([x for x in eqn if x in ascii_letters]),\
-                         eqn.replace(' ', '').replace('-', '+-').replace('^', '**').replace('(', '').replace(')', '').split('+')
-    if len(main_variable) > 1: return "This Is Multi-Variable Equation"
-    elif len(main_variable) == 0: return "This Is Not Valid Equation"
-    main_variable = list(main_variable)[0]
-    equation = '+'.join(['(' + i.split(main_variable)[0] + "*(%s)" % main_variable + ''.join(i.split(main_variable)[1:]) + ')'
-                                                      if len(i.split(main_variable)[0]) > 0 and len(i.split(main_variable)) > 1 and i.split(main_variable)[0][-1] != '*' and i.split(main_variable)[0][-1] != '-'
-                                                      else '(' + '(%s)**' %(i.split('**')[0]) + ''.join(i.split('**')[1:]) + ')'
-                                                      if len(i.split('**')) > 1 else '(' + '(%s)' %(i.split('**')[0])+ ')'  for i in eqn])
-    max_power = max([int(q.replace('(', '').replace(')', '').split('**')[1]) for q in eqn if q.count('**') > 0])
-    max_power_coffient, free_term, divisors, first_power_coffient = Fraction.from_float(float([x.split(main_variable)[0] if main_variable+'**'+ str(max_power)
-                                   in x.replace('(','').replace(')', '') and len(x.split(main_variable)[0]) > 0 else 1
-                                   for x in eqn][0])).limit_denominator(),\
-                                   Fraction.from_float(float([x for x in eqn if x.replace('.', '').replace('-','').isnumeric()][0])).limit_denominator(),\
-                                   lambda number: [n for n in range(1, int(abs(number))+1) if number % n == 0],\
-                                   [Fraction.from_float(float(x.split(main_variable)[0])) for x in eqn if x.count(main_variable) == 1 and len(x.split(main_variable)[1]) == 0]
-    first_power_coffient = first_power_coffient[0] if first_power_coffient else 0
-    if max_power == 2:
-        dis = (first_power_coffient ** 2) - 4*(free_term)*(max_power_coffient)
-        dis = (dis)**0.5 if dis >= 0 else None
-        return ("There Are Two Roots: %s, %s" %(str(Fraction.from_float(((-first_power_coffient)- dis)/(2*max_power_coffient))), str(Fraction.from_float(((-first_power_coffient)+dis)/(2*max_power_coffient))))
-                if dis > 0 else "There's Only One Root: %s" % str((-first_power_coffient)/(2*max_power_coffient))) if dis != None else "There's No Real Roots"
-    max_power_coffient_divisors, free_term_divisors = divisors(max_power_coffient), divisors(free_term)
-    roots = sum([[float(i/n), float(-i/n)] if not float(eval(equation.replace(main_variable, str(i/n)))) else [float(-i/n)]
-                      if not float(eval(equation.replace(main_variable, str(-i/n))))
-                      else i/n if not float(eval(equation.replace(main_variable, str(i/n)))) else []
-                      for i in free_term_divisors for n in max_power_coffient_divisors], [])
-    return "The Roots: %s" % ', '.join(list(map(str, map(Fraction.from_float, roots))))  if len(roots) > 0 else "There's No Roots"
-def get_line_eqn(point1, point2):
-    point1, point2 = tuple(int(x) for x in point1.split(',')), tuple(int(x) for x in point2.split(','))
-    slope = (point2[1] - point1[1])/(point2[0] - point1[0]) if point2[0] - point1[0] != 0 else "undefined"
-    if slope != 'undefined':
-        intercept = (slope*point1[0]) + point1[1]
-        slope_intercept_eqn = "Y = %sx + %s" % (slope, intercept)
-        point_slope_eqn = "Y = (%s)(x-%s) + %s" %(slope, point1[0], point1[1])
-        return "slope: %s\nslope intercept equation:%s\npoint slope equation:%s" % (slope, slope_intercept_eqn, point_slope_eqn)
-    else:
-        return "slope: undefined\nequation of line: x=%s" % point1[0]
 class bcolors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
@@ -114,6 +58,7 @@ def interpreter(code, tape):
         else:
             command_counter += 1
     return result
+    
 def find_prime_kPerm(n, kPerm):
     from itertools import permutations as perm
     def is_prime(number):
@@ -199,10 +144,6 @@ def knights_tour(start, size):
     return moves
 
 
-
-print(knights_tour([1, 1], 6))
-
-
 def sorting_algorithm(lst):
     main_list = []; [main_list.append(x) for x in lst if not x in main_list]
     sorted_array = []
@@ -285,48 +226,6 @@ def brainfuck_to_c(source_code):
 
 print(brainfuck_to_c("++++[.++--]"))
 
-
-def biggest_triang_int(point_list, center, radius):
-    try:
-        import itertools
-        vector_formulation = lambda a, b: (b[0]-a[0], b[1]-a[1], b[2]-a[2])
-        cross_product = lambda a, b: (a[1]*b[2] - a[2]*b[1], a[2]*b[0] - a[0]*b[2], a[0]*b[1] - a[1]*b[0])
-        vector_magnitude = lambda x,y,z: ((x**2)+(y**2)+(z**2))**(0.5)
-        inside_check = lambda p: True if vector_magnitude(*vector_formulation(center, p)) <= radius else False
-        triangle_area = lambda vector1, vector2: vector_magnitude(*cross_product(vector1, vector2))*0.5
-        areas = []; areas_combination = []; points = [(x) for x in point_list if inside_check(x)]
-        for combination in list(itertools.combinations(points, 3)):
-            vector1 = vector_formulation(combination[0], combination[1])
-            vector2 = vector_formulation(combination[0], combination[2])
-            area = triangle_area(vector1, vector2)
-            areas += [area]
-            areas_combination += [(combination, area)]
-        max_area = max(areas)
-        res = []
-        for x in areas_combination:
-            if x[1] == max_area:
-                res += [list(x[0])]
-        if len(res) <= 1:
-            return [len(areas), max_area, res[0]]
-        else:
-            return [len(areas), max_area, res]
-    except:
-            return []
-def intersction(*seq):
-    return list(set([x for x in seq[0] for q in seq[1:] if x in q ]))
-def biggest_triang_int(point_list, center, radius):
-    import itertools
-    vector_formulation = lambda a, b: (b[0]-a[0], b[1]-a[1], b[2]-a[2])
-    cross_product = lambda a, b: (a[1]*b[2] - a[2]*b[1], a[2]*b[0] - a[0]*b[2], a[0]*b[1] - a[1]*b[0])
-    vector_magnitude = lambda x,y,z: ((x**2)+(y**2)+(z**2))**(0.5)
-    inside_check = lambda p: True if vector_magnitude(*vector_formulation(center, p)) <= radius else False
-    triangle_area = lambda vector1, vector2: vector_magnitude(*cross_product(vector1, vector2))*0.5
-    areas = []
-    for combination in list(itertools.combinations([(x) for x in point_list if inside_check(x)], 3)):
-        vector1 = vector_formulation(combination[0], combination[1])
-        vector2 = vector_formulation(combination[0], combination[2])
-        areas += [triangle_area(vector1, vector2)]
-    return max(areas)
 class file_manager:
     import os
     def __init__(self, path):
@@ -355,30 +254,6 @@ class Infix:
     def __ror__(self, other):
         return Infix(lambda x, self=self, other=
 
-class matrix_operation:
-    custom_map = lambda self, function, iterable, command: function(iterable, command)
-    get_columns = lambda self, matrix:[[self.custom_map(lambda x,y: x[y], row, column) for row in matrix] for column in range(len(matrix[0]))]
-    addition_operation = lambda self, matrix1, matrix2: [[matrix1[row][column] + matrix2[row][column] for column in range(len(matrix1[row]))] for row in range(len(matrix1))]
-    subtraction_operation = lambda self, matrix1, matrix2: [[matrix1[row][column] - matrix2[row][column] for column in range(len(matrix1[row]))] for row in range(len(matrix1))]
-    multiplication_operation = lambda self, main_matrix, columns: [[sum(list(map(lambda x,y: x*y, row, column))) for column in columns] for row in main_matrix]
-    main_diagonal_elements = lambda self, matrix: [matrix[i][i] for i in range(len(matrix))]
-    secondery_diagonal_elements = lambda self, matrix: [matrix[i-1][-i] for i in range(1, len(matrix)+1)]        
-    def matrix_multiplication(self, M1,M2):
-        columns = get_columns(M2)
-        if len(columns[0]) == len(M1):
-            return self.multiplication_operation(M1, columns)
-        else:
-            return "Parsing Matrix Error"
-    def matrix_addition(self, M1, M2):
-        if len(M1) == len(M2) and len(self.get_columns(M1)) == len(self.get_columns(M2)):
-            return self.addition_operation(M1, M2)
-        else:
-            return "Parsing Matrix Error"
-    def matrix_subtraction(self, M1, M2):
-        if len(M1) == len(M2) and len(self.get_columns(M1)) == len(self.get_columns(M2)):
-            return self.subtraction_operation(M1, M2)
-        else:
-            return "Parsing Matrix Error"
 def loading_bar(length=10, time_sleep: 'millisecond'=100, shape1='*', shape2='-'):
     import time, sys
     progress_bar = ""
