@@ -399,3 +399,10 @@ def loading_bar(length=10, time_sleep: 'millisecond'=100, shape1='*', shape2='-'
             sys.stdout.write(progress_bar)
     sys.stdout.write(']')
 loading_bar(100, 500, '|')
+fact = lambda x: 1 if x == 0 else x * fact(x-1)
+def trailling_zeros(num):
+	counter, start = 0, 5
+	while int(num/start) >= 1:
+		counter += int(num/start)
+		start *= 5
+	return counter
