@@ -179,3 +179,11 @@ def permutation(lst):
 			for i in permutation(remlst):
 				perms.append(i + current_node)
 	return perms
+	
+def permutations(lst):
+	if len(lst) <= 1:
+		yield lst
+	else:
+		for i in range(len(lst)):
+			for x in permutations(lst[:i]+lst[i+1:]):
+				yield lst[i] + x
