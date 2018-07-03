@@ -58,7 +58,109 @@ def interpreter(code, tape):
         else:
             command_counter += 1
     return result
-    
+def simple_game():
+    import sys, os, random
+    gamer_choice = input('please choose X or O to start: ')
+    cells, non_used_cells = ['_' for x in range(9)], list(range(1, 10))
+    available_choices, main_matrix = ['x', 'o'], []
+
+    def print_matrix(data, length=3):
+        import sys
+        counter = 0
+        main_board_string = ''
+        for i in range(len(data)):
+            if (i + 1) % length == 0:
+                sys.stdout.write(str(data[i]) + '\n')
+                main_board_string += str(data[i] + '\n')
+                counter += 1
+            else:
+                sys.stdout.write(str(data[i]) + ' ')
+                main_board_string += str(data[i]) + ' '
+            sys.stdout.flush()
+        return main_board_string
+
+    def main_board_matrix(data):
+        data = data.rstrip()
+        main_matrix = []
+        for i in data.split('\n'):
+            main_matrix.append(i.split())
+        return main_matrix
+
+    def check_win(data):
+        def col_check():
+            nonlocal data
+            cols = []
+            for index in range(len(data[0])):
+                cols.append([data[0][index]])
+                for row in data[1:]:
+                    cols[index] += [row[index]]
+            for col in cols:
+                player = list(set(col))[0]
+                if len(set(col)) == 1 and player != '_':
+                    return True, player
+
+        def row_check():
+            nonlocal data
+            for row in data:
+                player = list(set(row))[0]
+                if len(set(row)) == 1 and player != '_':
+                    return True, player
+
+        def diagonal_check():
+            counter, right_diagonal = 0, []
+            nonlocal data
+            for row in data:
+                right_diagonal.append(row[counter])
+                counter += 1
+            player = list(set(right_diagonal))[0]
+            if len(set(right_diagonal)) == 1 and player != '_':
+                return True, player
+            counter, left_diagonal = 0, []
+            for row in data:
+                left_diagonal.append(row[-counter])
+                counter += 1
+            player = list(set(left_diagonal))[0]
+            if len(set(left_diagonal)) == 1 and player != '_':
+                return True, player
+        rows_check = row_check()
+        cols_check = col_check()
+        diagonal_check = diagonal_check()
+        if rows_check:
+            return rows_check[1]
+        elif cols_check:
+            return cols_check[1]
+        elif diagonal_check:
+            return diagonal_check[1]
+    if gamer_choice.upper() == 'X' or gamer_choice.upper() == 'O':
+        del available_choices[available_choices.index(gamer_choice.lower())]
+        print('[+] The game started.')
+        while non_used_cells:
+            try:
+                player_choice = int(input('[+] Please Enter Cell Number %s: ' % non_used_cells))
+                if player_choice not in non_used_cells:
+                    print('[+] Please Enter Valid Cell Number. Game will stop')
+                    os._exit(1)
+            except ValueError:
+                print('[+] Please Enter Valid Cell Number. Game will stop')
+                os._exit(1)
+            else:
+                if 1 <= player_choice <= 9:
+                    cells[player_choice-1] = gamer_choice
+                    del non_used_cells[non_used_cells.index(player_choice)]
+                    if non_used_cells:
+                        computer_choice = random.choice(non_used_cells)
+                        cells[computer_choice - 1] = available_choices[0]
+                        del non_used_cells[non_used_cells.index(computer_choice)]
+                    checker = check_win(main_board_matrix(print_matrix(cells)))
+                    if checker:
+                        print("%s Has win" % checker)
+                        break
+                else:
+                    print('[+] Please Enter Valid Cell Number. Game will stop')
+    else:
+        os.system('clear') if not sys.platform.__contains__('win') else os.system('clear')
+        simple_game()
+
 def find_prime_kPerm(n, kPerm):
     from itertools import permutations as perm
     def is_prime(number):
@@ -274,7 +376,6 @@ def loading_bar(length=10, time_sleep: 'millisecond'=100, shape1='*', shape2='-'
             sys.stdout.write(progress_bar)
     sys.stdout.write(']')
 loading_bar(100, 500, '|')
-fact = lambda x: 1 if x == 0 else x * fact(x-1)
 def trailling_zeros(num):
 	counter, start = 0, 5
 	while int(num/start) >= 1:
