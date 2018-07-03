@@ -13,6 +13,7 @@ def fibbo(nth_number=10):
             sys.stdout.write(str(n3)+'\n')
             sys.stdout.flush()
 
+fact = lambda x: 1 if x == 0 else x * fact(x-1)
 
 def rational_root_theorm(eqn):
     from fractions import Fraction; from string import ascii_letters; from itertools import chain
