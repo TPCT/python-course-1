@@ -168,3 +168,14 @@ def biggest_triang_int(point_list, center, radius):
         vector2 = vector_formulation(combination[0], combination[2])
         areas += [triangle_area(vector1, vector2)]
     return max(areas)
+    
+def permutation(lst):
+	if len(lst) <= 1:
+		return [lst]
+	else:
+		perms = []
+		for i in range(len(lst)):
+			current_node, remlst = lst[i], lst[:i] + lst[i+1:]
+			for i in permutation(remlst):
+				perms.append(i + current_node)
+	return perms
