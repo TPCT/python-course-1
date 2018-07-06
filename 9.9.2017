@@ -382,3 +382,32 @@ def trailling_zeros(num):
 		counter += int(num/start)
 		start *= 5
 	return counter
+def set_variable(package_name, variable_name, variable_value):
+	from sys import path as sys_path
+	from os import path as os_path
+	from os import listdir as list_dir
+	for path in sys_path:
+		if os_path.isdir(path):
+			packages = [x for x in list_dir(path) if package_name == x.rsplit('.py')[0]]
+			if len(packages) > 0:
+				module_reader = open(os_path.join(path, packages[0]), 'r+')
+				break
+	else:
+		return 'Module Not Found'
+	data = module_reader.readlines()
+	module_reader.seek(0)
+	Found = False
+	for line in data:
+		if str(variable_name) + '=' in line.replace(' ', ''):
+			splitted = line.replace(' ', '').split('=')
+			splitted[splitted.index(variable_name) + 1] = repr(variable_value) if type(variable_value) == str else variable_value
+			Found = True
+			module_reader.write(' = '.join(splitted))
+		else:
+			module_reader.write(line)
+		module_reader.truncate()
+	if Found:
+		return 'Variable changed successfully'
+	else:
+		return 'Variable cannot be found'
+	module_reader.close()
