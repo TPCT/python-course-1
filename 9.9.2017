@@ -411,3 +411,20 @@ def set_variable(package_name, variable_name, variable_value):
 	else:
 		return 'Variable cannot be found'
 	module_reader.close()
+
+def file_tree(path):
+	import os
+	path = os.path.realpath(path)
+	path_data = {}
+	if os.path.isdir(path):
+		path_data[path] = []
+		counter = 0
+		for i in os.listdir(path):
+			if os.path.isdir(os.path.join(path, i)):
+				path_data[path].append({i: []})
+				path_data[path][counter][i] = file_tree(os.path.join(path, i))
+			else:
+				path_data[path].append(i)
+			counter += 1
+		return path_data
+	return path
