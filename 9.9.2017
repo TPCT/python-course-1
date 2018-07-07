@@ -428,3 +428,17 @@ def file_tree(path):
 			counter += 1
 		return path_data
 	return path
+
+def formater(number):
+	counter, decimal_chunk, new_number, number = 0, '', '', str(number)
+	decimal_chunk = number.rsplit('.', 1)[-1] if '.' in number else ''
+	number = number.replace(decimal_chunk, '').replace('.', '')
+	for digit in number[::-1]:
+		if counter < 2:
+			new_number += digit
+			counter += 1
+		else:
+			new_number += '%s,' % digit
+			counter = 0
+	return new_number[::-1] + '.' + decimal_chunk if decimal_chunk else new_number[::-1]
+	
