@@ -1,3 +1,34 @@
+import os, time
+class File_Tree(object):
+	import os
+
+	def __init__(self, path, write_to_file = False, dest=os.path.join(os.path.dirname(__file__), str(time.localtime(time.time()).tm_mday))):
+		self.data = ''
+		if write_to_file:
+			self.file_write = open(dest, 'a+')
+			if len(self.file_write.read()) > 0:
+				self.file_write.write('------------\n')
+		self.init(path, 0, write_to_file)
+		if 'file_write' in self.__dict__:
+			self.file_write.close()
+
+	def init(self, path, indent, write_to_file):
+		if self.os.path.exists(path):
+			if write_to_file:
+				self.file_write.write('%s|_%s\n' % (' ' * indent, self.os.path.split(path)[-1]))
+			print('%s|_%s' % (' ' * indent, self.os.path.split(path)[-1]))
+			if not self.os.path.isdir(path):
+				for i in self.os.listdir(path):
+					self.init(self.os.path.join(path, i), indent + 3, write_to_file)
+		else:
+			return 'This Path Cannot Be Found'
+
+
+if __name__ == '__main__':
+	#tests
+	File_Tree(os.path.dirname(__file__), True)
+	File_Tree(os.path.realpath('/'), True)
+
 class bcolors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
