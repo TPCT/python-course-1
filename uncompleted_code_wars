@@ -23,6 +23,169 @@ def cheapest_path(t, start, finish, count=0, first=True, data_list = []):
 	else:
 		cheapest_path(t,  count_list[min(count_list.keys())][0], finish, count, False, data_list)
 
+from sys import setrecursionlimit
+setrecursionlimit(100000000)
+from time import time
+#time_out_problem
+def triangle1(row):
+	if len(row) > 1:
+		row, new_data1, new_data2 = list(row.replace(' ', '')), '', ''
+		while len(row) > 1:
+			colors = ['R', 'G', 'B']
+			try:
+				if row[0] == row[1]:
+					new_data1 += row[0]
+			from sys import setrecursionlimit
+setrecursionlimit(100000000)
+from time import time
+
+def triangle1(row):
+	if len(row) > 1:
+		row, new_data1, new_data2 = list(row.replace(' ', '')), '', ''
+		while len(row) > 1:
+			colors = ['R', 'G', 'B']
+			try:
+				if row[0] == row[1]:
+					new_data1 += row[0]
+				else:
+					colors.pop(colors.index(row[0])), colors.pop(colors.index(row[1]))
+					new_data1 += colors[0]
+				del row[0]
+			except: pass
+			colors = ['R', 'G', 'B']
+			try:
+				if row[-1] == row[-2]:
+					new_data2 += row[i]
+				else:
+					colors.pop(colors.index(row[-1])), colors.pop(colors.index(row[-2]))
+					new_data2 += colors[0]
+				del row[-1]
+			except: pass
+		new_data1 += new_data2[::-1]
+		return triangle1(new_data1)
+	else:
+		return row
+
+def triangle2(row):
+	print((len(row)**2)/2)
+	row, i = list(row.replace(' ', '')), 0
+	main_counter = 0
+	while len(row) > 1:
+		if i < lefrom sys import setrecursionlimit
+setrecursionlimit(100000000)
+from time import time
+
+def triangle1(row):
+	if len(row) > 1:
+		row, new_data1, new_data2 = list(row.replace(' ', '')), '', ''
+		while len(row) > 1:
+			colors = ['R', 'G', 'B']
+			try:
+				if row[0] == row[1]:
+					new_data1 += row[0]
+				else:
+					colors.pop(colors.index(row[0])), colors.pop(colors.index(row[1]))
+					new_data1 += colors[0]
+				del row[0]
+			except: pass
+			colors = ['R', 'G', 'B']
+			try:
+				if row[-1] == row[-2]:
+					new_data2 += row[i]
+				else:
+					colors.pop(colors.index(row[-1])), colors.pop(colors.index(row[-2]))
+					new_data2 += colors[0]
+				del row[-1]
+			except: pass
+		new_data1 += new_data2[::-1]
+		return triangle1(new_data1)
+	else:
+		return row
+
+def triangle2(row):
+	print((len(row)**2)/2)
+	row, i = list(row.replace(' ', '')), 0
+	main_counter = 0
+	while len(row) > 1:
+		if i < len(row)-1:
+			if row[i] == row[i + 1]:
+				row[i] = row[i+1]
+			else:
+				colors = ['R', 'G', 'B']
+				del colors[colors.index(row[i])], colors[colors.index(row[i+1])]
+				row[i] = colors[0]
+			i += 1
+		else:
+			i = 0
+			row.pop()
+		main_counter += 1
+	return row[0], main_counter
+
+def benchmarking(func, reps, *args):
+	start = time()
+	for i in range(reps):
+		func(*args)
+	return time()-startn(row)-1:
+			if row[i] == row[i + 1]:
+				row[i] = row[i+1]
+			else:
+				colors = ['R', 'G', 'B']
+				del colors[colors.index(row[i])], colors[colors.index(row[i+1])]
+				row[i] = colors[0]
+			i += 1
+		else:
+			i = 0
+			row.pop()
+		main_counter += 1
+	return row[0], main_counter
+
+def benchmarking(func, reps, *args):
+	start = time()
+	for i in range(reps):
+		func(*args)
+	return time()-start	else:
+					colors.pop(colors.index(row[0])), colors.pop(colors.index(row[1]))
+					new_data1 += colors[0]
+				del row[0]
+			except: pass
+			colors = ['R', 'G', 'B']
+			try:
+				if row[-1] == row[-2]:
+					new_data2 += row[i]
+				else:
+					colors.pop(colors.index(row[-1])), colors.pop(colors.index(row[-2]))
+					new_data2 += colors[0]
+				del row[-1]
+			except: pass
+		new_data1 += new_data2[::-1]
+		return triangle1(new_data1)
+	else:
+		return row
+
+def triangle2(row):
+	print((len(row)**2)/2)
+	row, i = list(row.replace(' ', '')), 0
+	main_counter = 0
+	while len(row) > 1:
+		if i < len(row)-1:
+			if row[i] == row[i + 1]:
+				row[i] = row[i+1]
+			else:
+				colors = ['R', 'G', 'B']
+				del colors[colors.index(row[i])], colors[colors.index(row[i+1])]
+				row[i] = colors[0]
+			i += 1
+		else:
+			i = 0
+			row.pop()
+		main_counter += 1
+	return row[0], main_counter
+
+def benchmarking(func, reps, *args):
+	start = time()
+	for i in range(reps):
+		func(*args)
+	return time()-start
 matrix = [[1, 2, 8],
 		  [2, 8, 8],
 		  [5, 5, 8],
