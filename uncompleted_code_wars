@@ -1,0 +1,30 @@
+def cheapest_path(t, start, finish, count=0, first=True, data_list = []):
+	X1, Y1 = start[0], start[1]
+	if first:
+		count = t[X1][Y1]
+
+	def has_new_pos():
+		pos_move = {}
+		if X1 + 1 < len(t):
+			pos_move.update({(X1 + 1, Y1): 'down'})
+		if X1 - 1 > -1:
+			pos_move.update({(X1 - 1, Y1): 'up'})
+		if Y1 + 1 < len(t[X1]):
+			pos_move.update({(X1, Y1 + 1): 'right'})
+		if Y1 - 1 > -1:
+			pos_move.update({(X1, Y1 - 1): 'left'})
+		return pos_move
+
+	count_list = {count + t[key[0]][key[1]]: [(key[0], key[1]), val] for key, val in has_new_pos().items()}
+	count = min(count_list.keys())
+	data_list += [count_list[min(count_list.keys())][1]]
+	if start == finish:
+		print(data_list, count)
+	else:
+		cheapest_path(t,  count_list[min(count_list.keys())][0], finish, count, False, data_list)
+
+matrix = [[1, 2, 8],
+		  [2, 8, 8],
+		  [5, 5, 8],
+		  [2, 5, 6]]
+print(cheapest_path(matrix, (2, 2), (0, 0)))
