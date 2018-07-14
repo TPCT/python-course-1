@@ -1,3 +1,7 @@
+#https://www.codewars.com/kata/upside-down-numbers-challenge-edition/train/python
+#time_out
+def solve(a, b):
+	return len([x for x in range(a, b) if str(x) == str(x)[::-1].translate(str.maketrans({'9': '6', '6': '9'})) and len(str(x).translate(str.maketrans({key: '' for key in ['1', '8', '0', '9', '6']}))) == 0])
 def cheapest_path(t, start, finish, count=0, first=True, data_list = []):
 	X1, Y1 = start[0], start[1]
 	if first:
