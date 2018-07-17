@@ -459,7 +459,22 @@ def file_tree(path):
 			counter += 1
 		return path_data
 	return path
-
+exp = lambda x, y: x * exp(x, y-1) if y > 0 else 1
+multiply = lambda x, y: x + multiply(x, y - 1) if y > 0 else 0
+def f1(word):
+	new_list, word, new_text = [word[0]], word[1:]+'x', ''
+	while word:
+		if new_list[-1] == word[0]:
+			new_list += [word[0]]
+			word = word[1:]
+		else:
+			new_text += '%s%s' % (new_list[-1], len(new_list))
+			new_list, word = [word[0]], word[1:]
+	return new_text
+def f1(word):
+	from string import ascii_letters
+	new_dict = {key: str(word).count(key) for key in ascii_letters}
+	return ''.join(['%s%s' % (key, val) if val > 0 else '' for key, val in new_dict.items()])
 def formater(number):
 	counter, decimal_chunk, new_number, number = 0, '', '', str(number)
 	decimal_chunk = number.rsplit('.', 1)[-1] if '.' in number else ''
