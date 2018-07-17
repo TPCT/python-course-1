@@ -476,7 +476,7 @@ def f1(word):
 	new_dict = {key: str(word).count(key) for key in ascii_letters}
 	return ''.join(['%s%s' % (key, val) if val > 0 else '' for key, val in new_dict.items()])
 
-def flaten_list(new_list, result):
+def flatten_list(new_list, result):
 	for i in new_list:
 		if isinstance(i, list):
 			flaten_list(i, result)
@@ -508,4 +508,14 @@ def flatten_dict(new_dict, result=None, key=''):
 				result[i] = new_dict[i]
 			else:
 				result[str(key) + '.' + str(i)] = new_dict[i]
+	return result
+def unflatten_dict(new_dict):
+	result = {}
+	for i in new_dict:
+		if '.' in i and not i.split('.')[0] in result:
+			result.update({i.split('.')[0]: {i.split('.')[1]: new_dict[i]}})
+		elif '.' in i and  i.split('.')[0] in result:
+			result[i.split('.')[0]].update({i.split('.')[1]: new_dict[i]})
+		else:
+			result.update({i: new_dict[i]})
 	return result
