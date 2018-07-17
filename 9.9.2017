@@ -538,3 +538,51 @@ def tree_reverse(list_):
 		else:
 			new_result += [i]
 	return new_result
+def dirtree(path, space_count=0, First = True):
+	if os_path.isdir(path):
+		if First:
+			print(path)
+		for i in dir_name(path):
+			if os_path.isdir(os_path.join(path, i)):
+				if space_count > 0:
+					print('|' + ' ' * space_count + '|-- %s' % (os_path.split(i)[-1]))
+				else:
+					print(' ' * space_count + '|-- %s' % (os_path.split(i)[-1]))
+				dirtree(os_path.join(path, i), space_count + 3, False)
+			else:
+				if space_count > 0:
+					print('|' + ' ' * space_count + '|-- %s' % (os_path.split(i)[-1]))
+				else:
+					print(' ' * space_count + '|-- %s' % (os_path.split(i)[-1]))
+	else:
+		if space_count > 0:
+			print('|' + ' ' * space_count + '|-- %s' % (os_path.split(i)[-1]))
+		else:
+			print(' ' * space_count + '|-- %s' % (os_path.split(i)[-1]))
+
+def json_encode(data):
+	if isinstance(data, bool):
+		if data:
+			return 'true'
+		else:
+			return 'false'
+	elif isinstance(data, (int, float)):
+		return str(data)
+	elif isinstance(data, str):
+		return '"%s"' % data.translate(str.maketrans({'"': '\"', '\t': '\\', '\n': '\\n'}))
+	elif isinstance(data, list):
+		return "[" + ", ".join(json_encode(d) for d in data) + "]"
+	elif isinstance(data, dict):
+		return '{' + ", ".join("%s: %s" % (json_encode(key), json_encode(val)) for key, val in data.items()) + "}"
+	else:
+		print(' ' * space_count + '|-- %s' % (os_path.split(path)[-1]))
+def count_change(amount, coin_type):
+	if amount == 0:
+		return 1
+	if amount < 0 or len(coin_type) == 0:
+		return 0
+	coin_copy = coin_type[:]
+	coin_copy.remove(coin_type[0])
+	with_first = count_change(amount, coin_copy)
+	without_first = count_change(amount - coin_type[0], coin_type)
+	return with_first + without_first
