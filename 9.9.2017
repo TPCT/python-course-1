@@ -519,3 +519,12 @@ def unflatten_dict(new_dict):
 		else:
 			result.update({i: new_dict[i]})
 	return result
+
+def treemap(func, list_):
+	new_result = []
+	for i in list_:
+		if isinstance(i, list):
+			new_result += [treemap(func, i)]
+		else:
+			new_result += [func(i)]
+	return new_result
