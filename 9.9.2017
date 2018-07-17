@@ -528,3 +528,13 @@ def treemap(func, list_):
 		else:
 			new_result += [func(i)]
 	return new_result
+
+def tree_reverse(list_):
+	list_ = list_[::-1]
+	new_result = []
+	for i in list_:
+		if isinstance(i, list):
+			new_result += [tree_reverse(i)]
+		else:
+			new_result += [i]
+	return new_result
