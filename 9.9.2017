@@ -497,3 +497,15 @@ def formater(number):
 			counter = 0
 	return new_number[::-1] + '.' + decimal_chunk if decimal_chunk else new_number[::-1]
 	
+def flatten_dict(new_dict, result=None, key=''):
+	if result is None:
+		result = {}
+	for i in new_dict:
+		if isinstance(new_dict[i], dict):
+			flatten_dict(new_dict[i], result, i)
+		else:
+			if not key:
+				result[i] = new_dict[i]
+			else:
+				result[str(key) + '.' + str(i)] = new_dict[i]
+	return result
