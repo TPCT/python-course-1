@@ -188,3 +188,36 @@ def permutations(lst):
 		for i in range(len(lst)):
 			for x in permutations(lst[:i]+lst[i+1:]):
 				yield lst[i] + x
+def calculate(expression: str):
+	expression = expression.replace('**', '^')
+	from operator import mul, add, sub, pow
+	operators = {'^': pow, '*': mul, '/': lambda x, y: x/y, '+': add, '-': sub}
+	checker = lambda: [True if '(' in expression else False, True if ')' in expression else False]
+	while any([True if x in expression else False for x in operators]):
+		if checker().count(True) == 2:
+			for i in expression:
+				if i == ')':
+					new_expression = expression[expression.rfind('(') + 1: expression.find(')', expression.rfind('('), len(expression))]
+					expression = expression[:expression.rfind('(')] + str(calculate(new_expression)) + expression[expression.find(')', expression.rfind('('), len(expression)) + 1:]
+					break
+		elif checker().count(False) == 2:
+			for i in operators:
+				while i in expression:
+					second_number, first_number = "", ""
+					second_counter = expression.index(i)
+					for j in range(1, len(expression) - expression.index(i)):
+						if expression[expression.index(i) + j] == '.' or str(expression[expression.index(i) + j]).isnumeric():
+							second_number += expression[expression.index(i) + j]
+							second_counter += 1
+						else:
+							break
+					first_counter = expression.index(i) - 1
+					while expression[first_counter] == '.' or expression[first_counter].isnumeric() and first_counter >= 0:
+						first_number = expression[first_counter] + first_number
+						first_counter -= 1
+					first_counter = first_counter + 1 if first_counter >= 0 else 0
+					result = operators[i](float(first_number), float(second_number)) if first_number and second_number else 0
+					expression = expression[:first_counter] + str(result) + expression[second_counter+1:]
+			return expression
+		else:
+			raise Exception("Calculation Error")
