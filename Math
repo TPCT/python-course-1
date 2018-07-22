@@ -221,3 +221,105 @@ def calculate(expression: str):
 			return expression
 		else:
 			raise Exception("Calculation Error")
+
+class matrix(object):
+	__mul_add = lambda self, row, column: sum([row[i] * column[i] for i in range(len(row))]) if len(row) == len(column) else None
+	__get_column = lambda self, matrix, column_number: [row[column_number] for row in matrix] if matrix and len(matrix) > column_number else None
+	
+	def __init__(self, matrix):
+		def __matrix__(matrix=None):
+			for i in matrix:
+				if len(i) != len(matrix[0]):
+					raise ValueError("Please Enter Valid Matrix")
+		if isinstance(matrix, str):
+			self.__matrix = [[int(element) for element in line.replace("  ", " ").replace(',', "").split()] for line in matrix.split("\n")]
+		elif isinstance(matrix, list):
+			self.__matrix = matrix
+		else:
+			raise ValueError("Please Enter Valid Matrix")
+		__matrix__(self.__matrix)
+	
+	def __str__(self):
+		return str(self.__matrix)
+	
+	def __len__(self):
+		return len(self.__matrix)
+	
+	def __getitem__(self, item):
+		return self.__matrix[item]
+	
+	def __add__(self, mat):
+		if isinstance(mat, matrix):
+			new_matrix = []
+			if len(mat) == len(self.__matrix) and len(mat[0]) == len(self.__matrix[0]):
+				for row in range(len(self.__matrix)):
+					new_matrix.append([])
+					for column in range(len(self.__matrix[0])):
+						new_matrix[row] += [self.__matrix[row][column] + mat[row][column]]
+				return matrix(new_matrix)
+		raise NotImplementedError("Matrix Class Must Be Added To The Same Class Type")
+	
+	def __sub__(self, mat):
+		if isinstance(mat, matrix):
+			new_matrix = []
+			if len(mat) == len(self.__matrix) and len(mat[0]) == len(self.__matrix[0]):
+				for row in range(len(self.__matrix)):
+					new_matrix.append([])
+					for column in range(len(self.__matrix[0])):
+						new_matrix[row] += [self.__matrix[row][column] - mat[row][column]]
+				return matrix(new_matrix)
+		raise NotImplementedError("Matrix Class Must Be Added To The Same Class Type")
+	
+	def __isub__(self, mat):
+		if isinstance(mat, matrix):
+			new_matrix = []
+			if len(mat) == len(self.__matrix) and len(mat[0]) == len(self.__matrix[0]):
+				for row in range(len(self.__matrix)):
+					new_matrix.append([])
+					for column in range(len(self.__matrix[0])):
+						new_matrix[row] += [self.__matrix[row][column] - mat[row][column]]
+				return matrix(new_matrix)
+		raise NotImplementedError("Matrix Class Must Be Added To The Same Class Type")
+	
+	def __mul__(self, other):
+		if isinstance(other, (float, int)):
+			return [[item * other for item in row] for row in self.__matrix]
+		elif isinstance(other, matrix):
+			new_matrix = []
+			for i in range(len(self.__matrix)):
+				new_matrix.append([])
+				for j in range(len(other[i])):
+					columns = self.__get_column(other, j)
+					if not columns is None:
+						operation = self.__mul_add(self.__matrix[i], columns)
+						if operation is not None:
+							new_matrix[i].append(operation)
+					else:
+						raise NotImplementedError("Matrix Class Must Be Added To The Same Class Type")
+			return matrix(new_matrix)
+		raise NotImplementedError("Matrix Class Must Be Added To The Same Class Type")
+	
+	def matrix_determinant_value(self):
+		if len(self.__get_column(self.__matrix, 0)) != len(self.__matrix):
+			raise TypeError("This Is Not Square Matrix")
+		
+		def calculate_matrix(matrix):
+			if len(matrix) == 2: return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]
+			sign, main_value, row1, matrix = 1, 0, matrix[0], matrix[1:]
+			minor_matrix = lambda matrix, column_number: [[row[i] for i in range(len(row)) if i != column_number] for
+			                                              row in matrix]
+			for i in range(len(row1)):
+				main_value += sign * row1[i] * calculate_matrix(minor_matrix(matrix, i))
+				sign *= -1
+			return main_value
+		
+		return calculate_matrix(self)
+	
+	def transpose(self):
+		return matrix([self.__get_column(self, i) for i in range(len(self.__matrix))])
+	
+	def __pow__(self, power):
+		new_multiplication_matrix = self
+		for i in range(power - 1):
+			new_multiplication_matrix *= self
+		return new_multiplication_matrix
