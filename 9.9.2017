@@ -603,3 +603,28 @@ def decimal_bin_representation(number: float = 0.0):
 			memory_chunk[2][i-1] = 0 if decimal_chunk < 2 ** -i else 1
 			decimal_chunk -= 2 ** -i if '-' not in str(decimal_chunk - 2 ** -i) else 0
 	return '|'.join(''.join([str(x) for x in memory_chunk[i]]) for i in range(len(memory_chunk)))
+#include <iostream>
+using namespace std;
+int main()
+{
+    cout << "Please enter the height of the tree: ";
+    int height, space_counter = 0;
+    cin >> height;
+    height = (2*height) + 1;
+    while (height >= 0){
+        int min_counter = 0;
+        while(min_counter < space_counter){
+            cout << " ";
+            min_counter++;
+        }
+        min_counter = 0;
+        while (min_counter < height){
+            cout << "*";
+            min_counter++;
+        }
+        cout << '\n';
+        height -= 2;
+        space_counter++;
+    }
+    return 0;
+}
