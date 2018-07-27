@@ -688,3 +688,21 @@ string parse_time(unsigned long seconds){
     }
     return parsed_string;
 }
+
+
+string set_width_fill(string text, int width, char fill_char, bool left = false){
+    int new_width = width - text.length();
+    if (new_width > 0){
+        if (left){
+            for (int i = 0; i < new_width; i++){
+                text += fill_char;
+            }
+        }
+        else{
+            for (int i = 0; i < new_width; i++){
+                text = fill_char + text;
+            }
+        }
+    }
+        return text;
+}
