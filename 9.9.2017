@@ -628,3 +628,63 @@ int main()
     }
     return 0;
 }
+
+string parse_time(unsigned long seconds){
+    const unsigned SECONDS_PER_MIN = 60,
+    SECONDS_PER_HOUR = SECONDS_PER_MIN * 60,
+    SECONDS_PER_DAY = SECONDS_PER_HOUR  * 24,
+    SECONDS_PER_MONTH = SECONDS_PER_DAY * 30,
+    SECONDS_PER_YEAR = SECONDS_PER_MONTH * 12,
+    SECONDS_PER_CENTURY = SECONDS_PER_YEAR * 100;
+    unsigned centuries = 0, years = 0, months = 0, days = 0, hours = 0, minutes = 0;
+    centuries = seconds / SECONDS_PER_CENTURY; seconds %= SECONDS_PER_CENTURY;
+    years = seconds / SECONDS_PER_YEAR; seconds %= SECONDS_PER_YEAR;
+    months = seconds / SECONDS_PER_MONTH; seconds %= SECONDS_PER_MONTH;
+    days = seconds / SECONDS_PER_DAY; seconds %= SECONDS_PER_DAY;
+    hours = seconds / SECONDS_PER_HOUR; seconds %= SECONDS_PER_HOUR;
+    minutes = seconds / SECONDS_PER_MIN; seconds %= SECONDS_PER_MIN;
+    string parsed_string = "";
+    switch (centuries){
+        case 1:
+            parsed_string += "1 century ";
+        default:
+            parsed_string += to_string(centuries) + " centuries ";
+            break;
+    }
+    switch (years){
+        case 1:
+            parsed_string += "1 year ";
+        default:
+            parsed_string += to_string(years) + " years ";
+            break;
+    }
+    switch (months){
+        case 1:
+            parsed_string += "1 month ";
+        default:
+            parsed_string += to_string(months) + " months ";
+            break;
+    }
+    switch (days){
+        case 1:
+            parsed_string += "1 day ";
+        default:
+            parsed_string += to_string(days) + " days ";
+            break;
+    }
+    switch (hours){
+        case 1:
+            parsed_string += "1 hour ";
+        default:
+            parsed_string += to_string(hours) + " hours ";
+            break;
+    }
+    switch (seconds){
+        case 1:
+            parsed_string += "1 second";
+        default:
+            parsed_string += to_string(seconds) + " seconds";
+            break;
+    }
+    return parsed_string;
+}
