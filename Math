@@ -323,39 +323,3 @@ class matrix(object):
 		for i in range(power - 1):
 			new_multiplication_matrix *= self
 		return new_multiplication_matrix
-#include <iostream>
-using namespace std;
-int main()
-{
-    a:
-        int number, is_negative = false;
-        cout << "Please enter number to get it's factors: ";
-        cin >> number;
-        int next_count = 2;
-        if (number > 0){
-            cout << 1 << " ";}
-        else
-            {
-                cout << "(" << -1 << ", " << 1 << ") ";
-                is_negative = true;
-                number *= -1;
-            }
-        while (next_count <= number)
-        {
-            if (number % next_count == 0)
-            {
-                if (is_negative)
-                {
-                    cout << "(" << next_count << ", " << -next_count << ") " ;
-                }
-                else
-                {
-                    cout << next_count << " ";
-                }
-            }
-            next_count += 1;
-        }
-        cout << "\n";
-        goto a;
-    return 0;
-}
