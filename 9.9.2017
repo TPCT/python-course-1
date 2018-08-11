@@ -1,4 +1,46 @@
 import os, time
+def quadratic(eqn=""):
+	
+	quadratics = ['x**2', 'x*x', 'x^2']
+	first_degree = ['x', 'x*1', 'x^1']
+	eqn = eqn.lower().replace('(', '').replace(')', '').replace(' ', '')
+	# 2x^(2) + 2(x) + 1 -> 2x^2+2x+1
+	eqn = eqn.split('+') + eqn.split('-') #2x^2+2x+1 => [2x^2, 2x, 1]
+	quadcoff = 0
+	fdegcoff = 0
+	const = 0
+	for i in eqn:
+		index = 0
+		for q in range(len(i)):
+			if i[q] == 'x':'''for i in ascii_letters:
+		if i in eqn and i.lower() != 'x':
+			raise ValueError('Please enter valid eqn')'''
+				index = q
+				break
+		else:
+			const += float(i) if i else 0
+		new_result = ''
+		for x in range(index, len(i)):
+			new_result += i[x]
+		if new_result in quadratics:
+			if i[:index]:
+				quadcoff += float(i[:index])
+			else:
+				quadcoff += 1.0
+		elif new_result in first_degree:
+			if i[:index]:
+				fdegcoff += float(i[:index])
+			else:
+				fdegcoff += 1.0
+	disc = fdegcoff**2 - 4*quadcoff*const
+	result = []
+	if disc >= 0:
+		disc **= 0.5
+		result.append((-fdegcoff + disc) / (2*quadcoff))
+		result.append((-fdegcoff + disc) / (2*quadcoff))
+		return set(result)
+	else:
+		raise ValueError('Disc. Must be +ve')
 class File_Tree(object):
 	import os
 
