@@ -351,13 +351,3 @@ class Matrix:
     __iadd__ = __radd__ = __add__
     __isub = __sub__
     __imul__ = __mul__
-matrix1 = Matrix([[1,  2,  3],
-                  [2,  4,  5],
-                  [7, 18, 12]])
-
-print(matrix1 ** 2)
-'''matrix2 = Matrix([[1, 2, 3],
-                     [2, 4, 5],
-                     [7, 17, 12]])
-new_matrix = matrix1 - matrix2
-print(new_matrix)'''
