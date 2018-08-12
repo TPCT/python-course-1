@@ -222,104 +222,142 @@ def calculate(expression: str):
 		else:
 			raise Exception("Calculation Error")
 
-class matrix(object):
-	__mul_add = lambda self, row, column: sum([row[i] * column[i] for i in range(len(row))]) if len(row) == len(column) else None
-	__get_column = lambda self, matrix, column_number: [row[column_number] for row in matrix] if matrix and len(matrix) > column_number else None
-	
-	def __init__(self, matrix):
-		def __matrix__(matrix=None):
-			for i in matrix:
-				if len(i) != len(matrix[0]):
-					raise ValueError("Please Enter Valid Matrix")
-		if isinstance(matrix, str):
-			self.__matrix = [[int(element) for element in line.replace("  ", " ").replace(',', "").split()] for line in matrix.split("\n")]
-		elif isinstance(matrix, list):
-			self.__matrix = matrix
-		else:
-			raise ValueError("Please Enter Valid Matrix")
-		__matrix__(self.__matrix)
-	
-	def __str__(self):
-		return str(self.__matrix)
-	
-	def __len__(self):
-		return len(self.__matrix)
-	
-	def __getitem__(self, item):
-		return self.__matrix[item]
-	
-	def __add__(self, mat):
-		if isinstance(mat, matrix):
-			new_matrix = []
-			if len(mat) == len(self.__matrix) and len(mat[0]) == len(self.__matrix[0]):
-				for row in range(len(self.__matrix)):
-					new_matrix.append([])
-					for column in range(len(self.__matrix[0])):
-						new_matrix[row] += [self.__matrix[row][column] + mat[row][column]]
-				return matrix(new_matrix)
-		raise NotImplementedError("Matrix Class Must Be Added To The Same Class Type")
-	
-	def __sub__(self, mat):
-		if isinstance(mat, matrix):
-			new_matrix = []
-			if len(mat) == len(self.__matrix) and len(mat[0]) == len(self.__matrix[0]):
-				for row in range(len(self.__matrix)):
-					new_matrix.append([])
-					for column in range(len(self.__matrix[0])):
-						new_matrix[row] += [self.__matrix[row][column] - mat[row][column]]
-				return matrix(new_matrix)
-		raise NotImplementedError("Matrix Class Must Be Added To The Same Class Type")
-	
-	def __isub__(self, mat):
-		if isinstance(mat, matrix):
-			new_matrix = []
-			if len(mat) == len(self.__matrix) and len(mat[0]) == len(self.__matrix[0]):
-				for row in range(len(self.__matrix)):
-					new_matrix.append([])
-					for column in range(len(self.__matrix[0])):
-						new_matrix[row] += [self.__matrix[row][column] - mat[row][column]]
-				return matrix(new_matrix)
-		raise NotImplementedError("Matrix Class Must Be Added To The Same Class Type")
-	
-	def __mul__(self, other):
-		if isinstance(other, (float, int)):
-			return [[item * other for item in row] for row in self.__matrix]
-		elif isinstance(other, matrix):
-			new_matrix = []
-			for i in range(len(self.__matrix)):
-				new_matrix.append([])
-				for j in range(len(other[i])):
-					columns = self.__get_column(other, j)
-					if not columns is None:
-						operation = self.__mul_add(self.__matrix[i], columns)
-						if operation is not None:
-							new_matrix[i].append(operation)
-					else:
-						raise NotImplementedError("Matrix Class Must Be Added To The Same Class Type")
-			return matrix(new_matrix)
-		raise NotImplementedError("Matrix Class Must Be Added To The Same Class Type")
-	
-	def matrix_determinant_value(self):
-		if len(self.__get_column(self.__matrix, 0)) != len(self.__matrix):
-			raise TypeError("This Is Not Square Matrix")
-		
-		def calculate_matrix(matrix):
-			if len(matrix) == 2: return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]
-			sign, main_value, row1, matrix = 1, 0, matrix[0], matrix[1:]
-			minor_matrix = lambda matrix, column_number: [[row[i] for i in range(len(row)) if i != column_number] for
-			                                              row in matrix]
-			for i in range(len(row1)):
-				main_value += sign * row1[i] * calculate_matrix(minor_matrix(matrix, i))
-				sign *= -1
-			return main_value
-		
-		return calculate_matrix(self)
-	
-	def transpose(self):
-		return matrix([self.__get_column(self, i) for i in range(len(self.__matrix))])
-	
-	def __pow__(self, power):
-		new_multiplication_matrix = self
-		for i in range(power - 1):
-			new_multiplication_matrix *= self
-		return new_multiplication_matrix
+class Matrix:
+    class InvalidMatrix(Exception):
+        __module__ = Exception.__module__
+    class InvalidOperation(InvalidMatrix):
+        pass
+    def determinant(self):
+        if len(self.__matrix) == len(self.__matrix[0]):
+            return self.__determinant(self.__matrix)
+        raise InvalidMatrix()
+    def cofactors(self):
+        new_matrix = [[] for x in range(len(self.__matrix))]
+        matrix = self.__matrix
+        c = 1
+        for i in range(len(matrix)):
+            for q in range(len(matrix[i])):
+                minor_matrix = matrix[:i] + matrix[i+1:]
+                minor_matrix = [[minor_matrix[r][c] for c in range(len(minor_matrix[r])) if c != q] for r in range(len(minor_matrix))]
+                new_matrix[i].append(c * self.__determinant(minor_matrix))
+                c *= -1
+        return Matrix(new_matrix)
+    def transpose(self):
+        return Matrix(self.__rotate(self.__matrix))
+    def inverse(self):
+        return (1/self.determinant()) * self.cofactors().transpose()
+    __column = lambda self, matrix, c: [x[c] for x in matrix]
+    __rotate = lambda self, matrix:[self.__column(matrix, x) for x in range(len(matrix))]
+    __matrix_multiplication = lambda self, matrix1, matrix2:[[sum([matrix1[r][col] * self.__column(matrix2, c)[col] for col in range(len(matrix2))]) for c in range(len(matrix2[0]))] for r in range(len(matrix1))]
+    __scalar_multiplication = lambda self, matrix, const:[[const * matrix[r][c] for c in range(len(matrix[r]))] for r in range(len(matrix))]
+    __matrix_addition = lambda self, matrix1, matrix2: [[matrix1[r][c] + matrix2[r][c] for c in range(len(matrix1[r]))] for r in range(len(matrix1))]
+    __lmatrix_subtraction = lambda self, matrix1, matrix2: [[matrix1[r][c] - matrix2[r][c] for c in range(len(matrix1[r]))] for r in range(len(matrix1))]
+    __rmatrix_subtraction = lambda self, matrix1, matrix2: [[matrix2[r][c] - matrix1[r][c] for c in range(len(matrix1[r]))] for r in range(len(matrix1))]
+    def __valid_matrix(function):
+        def wrapper(*args):
+            matrix = args[1]
+            if isinstance(matrix, Matrix):
+                matrix = matrix.matrix
+            matrix_row_len = len(matrix[0])
+            for i in matrix[1:]:
+                if len(i) != matrix_row_len:
+                    raise InvalidMatrix()
+            return function(*args)
+        return wrapper
+    def __ismatrix(function):
+        def wrapper(*args):
+            if isinstance(args[1], Matrix):
+                return function(*args)
+            else:
+                raise InvalidOperation()
+        return wrapper
+    def __square_matrix(function):
+        def wrapper(*args):
+            matrix = args[0]
+            if isinstance(matrix, Matrix):
+                if len(matrix.matrix) == len(matrix.matrix[0]):
+                    return function(*args)
+            raise InvalidMatrix
+    def __determinant(self, matrix):
+        if len(matrix) == 2:
+            return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]
+        c, v = 1, 0
+        for i in range(len(matrix[0])):
+            minor_matrix = []
+            for x in range(len(matrix[1:])):
+                minor_matrix.append([])
+                for q in range(len(matrix[x])):
+                    if i != q:
+                        minor_matrix[x] += [matrix[x+1][q]]
+            v += matrix[0][i] * c * self.__determinant(minor_matrix)
+            c *= -1
+        return v
+    def __pow__(self, exponent):
+        if isinstance(exponent, int):
+            new_matrix = self
+            for i in range(exponent-1):
+                new_matrix *= self
+            return new_matrix
+        else:
+            raise InvalidOperation
+    def __mul__(self, other=None):
+        if isinstance(other, (int, float)):
+            return Matrix(self.__scalar_multiplication(self.__matrix, other))
+        elif isinstance(other, Matrix):
+            if len(other.matrix) == len(self.__matrix[0]):
+                return Matrix(self.__matrix_multiplication(self.__matrix, other.matrix))
+            else:
+                raise InvalidMatrix()
+        else:
+            raise self.InvalidOperation()
+    def __rmul__(self, other=None):
+        if isinstance(other, (int, float)):
+            return Matrix(self.__scalar_multiplication(self.__matrix, other))
+        elif isinstance(other, Matrix):
+            if len(other.matrix[0]) == len(self.__matrix):
+                return Matrix(self.__matrix_multiplication(other.matrix, self.__matrix))
+            else:
+                raise InvalidMatrix()
+        else:
+            raise self.InvalidOperation()
+    @__valid_matrix
+    def __init__(self, matrix:list=[]):
+        if len(matrix) > 0:
+            if len(matrix[0]) > 0:
+                self.__matrix = matrix
+                self.__rows = len(matrix)
+                self.__columns = len(matrix[0])
+            else:
+                raise self.InvalidMatrix()
+        else:
+            raise self.InvalidMatrix()
+    @__valid_matrix
+    @__ismatrix
+    def __add__(self, matrix=None):
+        return Matrix(self.__matrix_addition(self.__matrix, matrix.matrix))
+    @__valid_matrix
+    @__ismatrix
+    def __sub__(self, matrix=None):
+        return Matrix(self.__lmatrix_subtraction(self.__matrix, matrix.matrix))
+    @__valid_matrix
+    @__ismatrix
+    def __rsub__(self, matrix=None):
+        return Matrix(self.__rmatrix_subtraction(matrix.matix, self.__matrix))
+    def __repr__(self):
+        return "Matrix%s" % self.__matrix
+    @property
+    def matrix(self):
+        return self.__matrix
+    __iadd__ = __radd__ = __add__
+    __isub = __sub__
+    __imul__ = __mul__
+matrix1 = Matrix([[1,  2,  3],
+                  [2,  4,  5],
+                  [7, 18, 12]])
+
+print(matrix1 ** 2)
+'''matrix2 = Matrix([[1, 2, 3],
+                     [2, 4, 5],
+                     [7, 17, 12]])
+new_matrix = matrix1 - matrix2
+print(new_matrix)'''
