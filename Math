@@ -188,39 +188,40 @@ def permutations(lst):
 		for i in range(len(lst)):
 			for x in permutations(lst[:i]+lst[i+1:]):
 				yield lst[i] + x
-def calculate(expression: str):
-	expression = expression.replace('**', '^')
-	from operator import mul, add, sub, pow
-	operators = {'^': pow, '*': mul, '/': lambda x, y: x/y, '+': add, '-': sub}
-	checker = lambda: [True if '(' in expression else False, True if ')' in expression else False]
-	while any([True if x in expression else False for x in operators]):
-		if checker().count(True) == 2:
-			for i in expression:
-				if i == ')':
-					new_expression = expression[expression.rfind('(') + 1: expression.find(')', expression.rfind('('), len(expression))]
-					expression = expression[:expression.rfind('(')] + str(calculate(new_expression)) + expression[expression.find(')', expression.rfind('('), len(expression)) + 1:]
-					break
-		elif checker().count(False) == 2:
-			for i in operators:
-				while i in expression:
-					second_number, first_number = "", ""
-					second_counter = expression.index(i)
-					for j in range(1, len(expression) - expression.index(i)):
-						if expression[expression.index(i) + j] == '.' or str(expression[expression.index(i) + j]).isnumeric():
-							second_number += expression[expression.index(i) + j]
-							second_counter += 1
-						else:
-							break
-					first_counter = expression.index(i) - 1
-					while expression[first_counter] == '.' or expression[first_counter].isnumeric() and first_counter >= 0:
-						first_number = expression[first_counter] + first_number
-						first_counter -= 1
-					first_counter = first_counter + 1 if first_counter >= 0 else 0
-					result = operators[i](float(first_number), float(second_number)) if first_number and second_number else 0
-					expression = expression[:first_counter] + str(result) + expression[second_counter+1:]
-			return expression
-		else:
-			raise Exception("Calculation Error")
+def calculator(statement):
+    if not isinstance(statement, str):
+        raise ValueError()
+    from re import compile, findall, sub as resub
+    from operator import add, mul, pow, sub
+    def reb(statement):
+        for number in findall('(?<=\()\d*\.?\d*(?=\))', statement):
+            statement = statement.replace('(%s)' % number, number)
+        return statement
+    statement = reb(statement)
+    div = lambda x, y: x/y
+    operations = {'**': pow, '*': mul, '/': div, '+': add, '-':sub}
+    converter = lambda x, y: (float(x), float(y))
+    bpattern = r'(?<=\().*(?=\))'
+    numbers_matches = compile(pattern=bpattern)
+    def parse_brackets(statement):
+        for number in numbers_matches.finditer(statement):
+            for i in operations:
+                statement = statement.replace('(%s)', number.group())
+                if i in number.group():
+                    statement = statement.replace('(%s)' % number.group(), small_calculator(number.group()))
+        return statement
+    def simple_calculate(statement):
+        while findall(r'[\+\-(\*\*\)\*/]+', statement):
+            for i in operations:
+                compiler = compile('(?:\d*\.?\d*'+i.translate(str.maketrans({i if not i =='**' else '*': i.replace(i, '\%s' % i) if not i == '**' else '\*'}))+'\d*\.?\d*)')
+                for x in compiler.findall(statement):
+                    if i in x:
+                        statement = statement[:statement.index(x)] + statement[statement.index(x): statement.index(x)+len(x)].replace(x, str(operations[i](*converter(*x.split(i))))) + statement[statement.index(x)+len(x):]
+        return statement
+    statement = parse_brackets(statement)
+    statement = simple_calculate(statement)
+    return statement
+
 
 class Matrix:
     class InvalidMatrix(Exception):
