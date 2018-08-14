@@ -208,7 +208,7 @@ def calculator(statement):
             for i in operations:
                 statement = statement.replace('(%s)', number.group())
                 if i in number.group():
-                    statement = statement.replace('(%s)' % number.group(), small_calculator(number.group()))
+                    statement = statement.replace('(%s)' % number.group(), calculator(number.group()))
         return statement
     def simple_calculate(statement):
         while findall(r'[\+\-(\*\*\)\*/]+', statement):
