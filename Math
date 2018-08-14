@@ -188,7 +188,8 @@ def permutations(lst):
 		for i in range(len(lst)):
 			for x in permutations(lst[:i]+lst[i+1:]):
 				yield lst[i] + x
-def calculator(statement):
+def simple_calculator(statement):
+    statement = statement.replace(' ', ' ')
     if not isinstance(statement, str):
         raise ValueError()
     from re import compile, findall, sub as resub
@@ -208,14 +209,15 @@ def calculator(statement):
             for i in operations:
                 statement = statement.replace('(%s)', number.group())
                 if i in number.group():
-                    statement = statement.replace('(%s)' % number.group(), calculator(number.group()))
+                    statement = statement.replace('(%s)' % number.group(), simple_calculate(number.group()))
         return statement
     def simple_calculate(statement):
-        while findall(r'[\+\-(\*\*\)\*/]+', statement):
+        while findall(r'\d+(?:\.\d+)?[\+\-\/\**\*]\d+(?:\.\d+)?', statement):
             for i in operations:
-                compiler = compile('(?:\d*\.?\d*'+i.translate(str.maketrans({i if not i =='**' else '*': i.replace(i, '\%s' % i) if not i == '**' else '\*'}))+'\d*\.?\d*)')
+                compiler = compile('\d+(?:\.\d+)?'+i.translate(str.maketrans({i if not i =='**' else '*': i.replace(i, '\%s' % i) if not i == '**' else '\*'}))+'\d+(?:\.\d+)?')
                 for x in compiler.findall(statement):
                     if i in x:
+                        print(statement, x)
                         statement = statement[:statement.index(x)] + statement[statement.index(x): statement.index(x)+len(x)].replace(x, str(operations[i](*converter(*x.split(i))))) + statement[statement.index(x)+len(x):]
         return statement
     statement = parse_brackets(statement)
