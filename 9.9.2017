@@ -1,4 +1,105 @@
 import os, time
+def selection_sort1(array):
+    new_array = array.copy()
+    array = array.copy()
+    for i in range(len(array)):
+        minimium = min(new_array)
+        new_array.remove(minimium)
+        array[i] = minimium
+    return array
+
+def selection_sort2(array):
+    for i in range(len(array)):
+        temp, minimium = array[i], min(array[i:])
+        index = array[i:].index(minimium)
+        array[i] = minimium
+        array[i+index] = temp
+    return array
+
+def insert_sort(array):
+    sorted_array, new_array = [array[0]], array[1:].copy()
+    while new_array:
+        item = new_array[0]
+        for i in range(len(sorted_array)):
+            if sorted_array[i] >= item:
+                sorted_array = sorted_array[:i] + [item] + sorted_array[i:]
+                break
+        else:
+            sorted_array.append(item)
+        new_array = new_array[1:]
+    return sorted_array
+
+def shell_sort1(array):
+    n = len(array)
+    gap = n // 2
+    array = array.copy()
+    while gap > 0:
+        for i in range(gap, n-gap):
+            j = i
+            while 0 <= j < n-gap:
+                if array[j] > array[j+gap]:
+                    array[j], array[j+gap] = array[j+gap], array[j]
+                    j = i
+                    continue
+                if array[j-gap] > array[j] and j-gap >= 0:
+                    array[j-gap], array[j] = array[j], array[j-gap]
+                    j -= gap
+                    continue
+                j += gap
+
+        gap //= 2
+    return array
+
+def shell_sort2(array):
+    n = len(array)
+    array = array.copy()
+    gap = n // 2
+    while gap:
+        for i in range(gap, n):
+                temp = array[i]
+                j = i
+                while j >= gap and array[j-gap] > temp:
+                    array[j] = array[j-gap]
+                    j -= gap
+                array[j] = temp
+        gap //= 2
+    return array
+
+def bubble_sort(array):
+    array = array.copy()
+    for i in range(len(array)):
+        for q in range(len(array)-i-1):
+            if array[q] > array[q+1]:
+                array[q], array[q+1] = array[q+1], array[q]
+    return array
+
+def create_dictionary(word_length, dict_length):
+    from string import ascii_lowercase
+    from random import randint, choice
+    dictionary = []
+    for i in range(dict_length):
+        create_word = lambda word_length: ''.join([choice(ascii_lowercase) for x in range(word_length)])
+        word = create_word(word_length)
+        while word in dictionary:
+            word = create_word(word_length)
+        dictionary.append(word)
+    return dictionary
+
+def binary_search(word, dictionary):
+    n = len(dictionary) // 2
+    while n:
+        if word > dictionary[n]:
+            dictionary = dictionary[n:]
+            n = len(dictionary) // 2
+            continue
+        elif word < dictionary[n]:
+            dictionary = dictionary[:n]
+            n = len(dictionary) // 2
+            continue
+        elif word == dictionary[n]:
+            return word
+        else:
+            return 'Word not found'
 def quadratic(eqn=""):
 	
 	quadratics = ['x**2', 'x*x', 'x^2']
