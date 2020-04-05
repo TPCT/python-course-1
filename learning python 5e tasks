@@ -1,0 +1,7 @@
+def sum_func(iterable):
+    if not iterable:
+        return iterable
+    iterable = list(iterable) if iter(iterable) == iterable else iterable
+    if len(iterable) == 1:
+        return iterable[0]
+    return iterable[0] + sum_func(iterable[1:])
